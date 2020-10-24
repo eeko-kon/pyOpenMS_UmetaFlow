@@ -1,3 +1,6 @@
+import numpy as np
+import pandas as pd
+import matplotlib
 import pyopenms
 from pyopenms import *
 
@@ -67,5 +70,5 @@ cons_map_p= ConsensusMap()
 deconcoluted= deconv.compute(feature_map, f_out, cons_map, cons_map_p)
 
 search= AccurateMassSearchEngine()
-search.run(deconcoluted, "PositiveAdducts.tsv", "NegativeAdducts.tsv", "HMDBMappingFile.tsv", "HMDB2StructMapping.tsv"  )
+search.run(deconcoluted, "PositiveAdducts.tsv", "NegativeAdducts.tsv", "HMDBMappingFile.tsv", "HMDB2StructMapping.tsv")
 
