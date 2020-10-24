@@ -64,8 +64,8 @@ deconv = MetaboliteFeatureDeconvolution()
 f_out= FeatureMap()
 cons_map= ConsensusMap()
 cons_map_p= ConsensusMap()
-deconv.compute(feature_map, f_out, cons_map, cons_map_p)
+deconcoluted= deconv.compute(feature_map, f_out, cons_map, cons_map_p)
 
 search= AccurateMassSearchEngine()
-fp= feature_map.search()
+search.run(deconcoluted, "PositiveAdducts.tsv", "NegativeAdducts.tsv", "HMDBMappingFile.tsv", "HMDB2StructMapping.tsv"  )
 
