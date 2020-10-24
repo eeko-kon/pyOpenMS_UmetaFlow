@@ -27,7 +27,7 @@ for spec in exp.getSpectra():
     peak_map.addSpectrum(spec)
 
 mass_trace_detect = MassTraceDetection()
-mass_trace_detect.run(peak_map, mass_traces)
+mass_trace_detect.run(peak_map, mass_traces, 10000000000000)
 
 print('# Mass traces:', len(mass_traces))
 
@@ -45,7 +45,7 @@ print('# Features:', feature_map.size())
 """
 feature_map.setUniqueIds()
 fh = FeatureXMLFile()
-fh.store("/py4e/store/hne.featureXML", feature_map)
+fh.store("store.featureXML", feature_map)
 print("Found", feature_map.size(), "features")
 FeatureXMLFile().store('FeatureFindingMetabo.featureXML', feature_map)
 
