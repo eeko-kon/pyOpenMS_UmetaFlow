@@ -1,0 +1,7 @@
+git pull: Get the newest changes 
+*make changes*
+git add . : Add changes and utracked files to commin
+git commin -m "your message" : package all added changes to commit
+git push : push changes to github
+
+always git status : gives current status
