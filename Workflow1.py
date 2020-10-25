@@ -73,7 +73,7 @@ search= AccurateMassSearchEngine()
 parsefiles= search.init()
 cons_map2= ConsensusMap()
 cons_map3= ConsensusMap()
-hits= parsefiles.run(feature_map, cons_map3)
+hits= parsefiles. (feature_map, cons_map3)
 
 
 #feature_map, "PositiveAdducts.tsv", "NegativeAdducts.tsv", "HMDBMappingFile.tsv", "HMDB2StructMapping.tsv"
