@@ -54,18 +54,20 @@ for p in feature_map:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
 
+
+#For some reason , the terminal crashes when I call the deconvolution at line #63
 """
-For some reason , the terminal crashes when I call the deconvolution at line #63
 deconv = MetaboliteFeatureDeconvolution()
 f_out= FeatureMap()
 cons_map0= ConsensusMap()
 cons_map1= ConsensusMap()
 deconcoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
 """ 
+
 search= AccurateMassSearchEngine()
 parsefiles= search.init() 
 mztab= MzTab()
-hits= search._run_0(feature_map, mztab) #it also crashes here before I manage to store the information. Instead of feature_map I d like to call for the deconvoluted spectra but impossible since it crashes laso on the previous step
+hits= search._run_0(feature_map, mztab) #it also crashes here before I manage to store the information. Instead of feature_map I d like to call for the deconvoluted spectra but impossible since it crashes also on the previous step
 mztab.store("Masshits.mztab", hits)
 print(hits)
 
