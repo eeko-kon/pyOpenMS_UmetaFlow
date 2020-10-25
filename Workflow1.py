@@ -61,14 +61,20 @@ pylab.plot(p.getRT(), p.getIntensity(), '-')
 pylab.xlabel('Retention (s)')
 pylab.ylabel('Intensity')
 print(pylab.show())
-"""
+
 
 deconv = MetaboliteFeatureDeconvolution()
 f_out= FeatureMap()
-cons_map= ConsensusMap()
-cons_map_p= ConsensusMap()
-deconcoluted= deconv.compute(feature_map, f_out, cons_map, cons_map_p)
-
+cons_map0= ConsensusMap()
+cons_map1= ConsensusMap()
+deconcoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
+""" 
 search= AccurateMassSearchEngine()
-search.run(deconcoluted, "PositiveAdducts.tsv", "NegativeAdducts.tsv", "HMDBMappingFile.tsv", "HMDB2StructMapping.tsv")
+parsefiles= search.init()
+cons_map2= ConsensusMap()
+cons_map3= ConsensusMap()
+hits= parsefiles.run(feature_map, cons_map3)
+
+
+#feature_map, "PositiveAdducts.tsv", "NegativeAdducts.tsv", "HMDBMappingFile.tsv", "HMDB2StructMapping.tsv"
 
