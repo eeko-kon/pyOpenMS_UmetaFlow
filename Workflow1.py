@@ -47,15 +47,15 @@ print('# Features:', feature_map.size())
 """
 feature_map.setUniqueIds()
 fh = FeatureXMLFile()
-fh.store("store.featureXML", feature_map)
 print("Found", feature_map.size(), "features")
-FeatureXMLFile().store('FeatureFindingMetabo.featureXML', feature_map)
+fh.store('FeatureFindingMetabo.featureXML', feature_map)
 
 for p in feature_map:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
 
 """
+For some reason , the terminal crashes when I call the deconvolution at line #63
 deconv = MetaboliteFeatureDeconvolution()
 f_out= FeatureMap()
 cons_map0= ConsensusMap()
@@ -66,6 +66,7 @@ search= AccurateMassSearchEngine()
 parsefiles= search.init()
 mztab= MzTab()
 hits= search._run_0(feature_map, mztab)
+mztab.store("Masshits.mztab", hits)
 print(hits)
 
 
