@@ -63,9 +63,9 @@ cons_map1= ConsensusMap()
 deconcoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
 """ 
 search= AccurateMassSearchEngine()
-parsefiles= search.init()
+parsefiles= search.init() 
 mztab= MzTab()
-hits= search._run_0(feature_map, mztab)
+hits= search._run_0(feature_map, mztab) #it also crashes here before I manage to store the information. Instead of feature_map I d like to call for the deconvoluted spectra but impossible since it crashes laso on the previous step
 mztab.store("Masshits.mztab", hits)
 print(hits)
 
