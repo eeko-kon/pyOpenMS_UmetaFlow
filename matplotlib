@@ -1,0 +1,6 @@
+
+import pylab
+pylab.plot(p.getRT(), p.getIntensity(), '-')
+pylab.xlabel('Retention (s)')
+pylab.ylabel('Intensity')
+print(pylab.show())

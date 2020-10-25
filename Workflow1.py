@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import matplotlib
 import pyopenms
 from pyopenms import *
 
@@ -55,14 +54,8 @@ FeatureXMLFile().store('FeatureFindingMetabo.featureXML', feature_map)
 for p in feature_map:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
+
 """
-import pylab
-pylab.plot(p.getRT(), p.getIntensity(), '-')
-pylab.xlabel('Retention (s)')
-pylab.ylabel('Intensity')
-print(pylab.show())
-
-
 deconv = MetaboliteFeatureDeconvolution()
 f_out= FeatureMap()
 cons_map0= ConsensusMap()
@@ -71,10 +64,8 @@ deconcoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
 """ 
 search= AccurateMassSearchEngine()
 parsefiles= search.init()
-cons_map2= ConsensusMap()
-cons_map3= ConsensusMap()
-hits= parsefiles. (feature_map, cons_map3)
+mztab= MzTab()
+hits= search._run_0(feature_map, mztab)
+print(hits)
 
-
-#feature_map, "PositiveAdducts.tsv", "NegativeAdducts.tsv", "HMDBMappingFile.tsv", "HMDB2StructMapping.tsv"
 
