@@ -41,10 +41,11 @@ ff = FeatureFindingMetabo()
 ff.run(mass_traces_split,
     feature_map,
     mass_traces_filtered)
-"""
+
+
 print('# Mass traces filtered:', len(mass_traces_filtered))
 print('# Features:', feature_map.size())
-"""
+
 feature_map.setUniqueIds()
 fh = FeatureXMLFile()
 print("Found", feature_map.size(), "features")
@@ -52,7 +53,6 @@ fh.store('FeatureFindingMetabo.featureXML', feature_map)
 
 for p in feature_map:
     print(p.getRT(), p.getIntensity(), p.getMZ())
-
 
 
 #For some reason , the terminal crashes when I call the deconvolution at line #63
