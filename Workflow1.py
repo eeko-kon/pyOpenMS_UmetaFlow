@@ -5,13 +5,13 @@ from pyopenms import *
 
 options = PeakFileOptions()
 options.setMSLevels([1])
-fh = MzXMLFile()
+fh = MzMLFile()
 fh.setOptions(options)
 
 exp = MSExperiment()
 
 import sys
-MzXMLFile().load(sys.argv[1], exp)
+MzMLFile().load(sys.argv[1], exp)
 
 feature_map = FeatureMap()
 mass_traces = []
@@ -55,21 +55,17 @@ fh.store('FeatureFindingMetabo.featureXML', feature_map)
 for p in feature_map:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
-
-#For some reason , the terminal crashes when I call the deconvolution at line #63
-"""
 deconv = MetaboliteFeatureDeconvolution()
 f_out= FeatureMap()
 cons_map0= ConsensusMap()
 cons_map1= ConsensusMap()
-deconcoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
-""" 
-
+deconvoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
+ 
 search= AccurateMassSearchEngine()
 parsefiles= search.init() 
 mztab= MzTab()
-hits= search._run_0(feature_map, mztab) #it also crashes here before I manage to store the information. Instead of feature_map I d like to call for the deconvoluted spectra but impossible since it crashes also on the previous step
-mztab.store("Masshits.mztab", hits)
+hits= search._run_0(deconvoluted, mztab) 
+mztab.store("Masshits.mztab", mztab)
 print(hits)
 
 
