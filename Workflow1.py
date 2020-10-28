@@ -10,7 +10,8 @@ fh.setOptions(options)
 
 exp = MSExperiment()
 
-MzMLFile().load("raw_files/20200723_NBC_UMETAB137_Albus_O_acu_POS_009.mzML", exp)
+import sys
+MzXMLFile().load(sys.argv[1], exp)
 
 feature_map = FeatureMap()
 mass_traces = []
