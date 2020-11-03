@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import pyopenms
 from pyopenms import *
+<<<<<<< HEAD:WorkflowFirst.py
 import sys
 
 exp = MSExperiment()
@@ -9,6 +10,18 @@ exp = MSExperiment()
 print("loading")
 MzMLFile().load("WGS14_standard_POS_005_noncentroid.mzML", exp)   #or MzMLFile().load(sys.argv[1].exp)
 print("loaded")
+=======
+
+options = PeakFileOptions()
+options.setMSLevels([1])
+fh = MzMLFile()
+fh.setOptions(options)
+
+exp = MSExperiment()
+
+import sys
+MzMLFile().load(sys.argv[1], exp)
+>>>>>>> b227cb79da7f79aaa4d8571f1364351fd037ac45:Workflow1.py
 
 feature_map = FeatureMap()
 mass_traces = []
@@ -51,6 +64,7 @@ deconv = MetaboliteFeatureDeconvolution()
 f_out= FeatureMap()
 cons_map0= ConsensusMap()
 cons_map1= ConsensusMap()
+<<<<<<< HEAD:WorkflowFirst.py
 deconcoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
 
 
@@ -66,6 +80,16 @@ original_input_mzml =
 sirius_output_paths= []
 file= MzTab()
 SiriusMzTabWriter().read("sirius_output_paths", original_input_mzml, )
+=======
+deconvoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
+ 
+search= AccurateMassSearchEngine()
+parsefiles= search.init() 
+mztab= MzTab()
+hits= search._run_0(deconvoluted, mztab) 
+mztab.store("Masshits.mztab", mztab)
+print(hits)
+>>>>>>> b227cb79da7f79aaa4d8571f1364351fd037ac45:Workflow1.py
 
 SiriusAdapterHit(             SiriusAdapterRun(             SiriusMzTabWriter(
 SiriusAdapterIdentification(  SiriusMSFile( 
