@@ -48,7 +48,7 @@ for p in feature_map:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
 deconv = MetaboliteFeatureDeconvolution()
-f_out= FeatureXMLFile()
+f_out= FeatureMap()
 cons_map0= ConsensusMap()
 cons_map1= ConsensusMap()
 deconcoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
@@ -57,6 +57,9 @@ search= AccurateMassSearchEngine()
 parsefiles= search.init() 
 output= MzTab()
 hits= search._run_0(deconcoluted, output) 
+
+#new= Feature()
+#FeatureXMLFile().load(output, new)
 
 #Now I have to add SIRIUS fragmentation trees with seed:accumasssearchengine
 #and then MS2 database search
