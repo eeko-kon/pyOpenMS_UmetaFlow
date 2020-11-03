@@ -3,10 +3,13 @@ import pandas as pd
 import pyopenms
 from pyopenms import *
 import sys
+
 exp = MSExperiment()
-print("about load")
-MzMLFile().load("filename", exp)   #or MzMLFile().load(sys.argv[1].exp)
-print("successfully loaded")
+
+print("loading")
+MzMLFile().load("WGS14_standard_POS_005_noncentroid.mzML", exp)   #or MzMLFile().load(sys.argv[1].exp)
+print("loaded")
+
 feature_map = FeatureMap()
 mass_traces = []
 mass_traces_split = []
@@ -23,7 +26,7 @@ for chrom in exp.getChromatograms():
 for spec in exp.getSpectra():
     peak_map.addSpectrum(spec)
 
-MassTraceDetection().run(peak_map, mass_traces, 10000000000000)
+MassTraceDetection().run(peak_map, mass_traces)
 print('# Mass traces:', len(mass_traces))
 ElutionPeakDetection().detectPeaks(mass_traces, mass_traces_split)
 print('# Mass traces split:', len(mass_traces_split))
@@ -50,10 +53,22 @@ cons_map0= ConsensusMap()
 cons_map1= ConsensusMap()
 deconcoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
 
+
 search= AccurateMassSearchEngine()
 parsefiles= search.init() 
-mztab= MzTab()
-hits= search._run_0(deconcoluted, mztab) 
+output= MzTab()
+hits= search._run_0(deconcoluted, output) 
 
+#Now I have to add SIRIUS fragmentation trees with seed:accumasssearchengine
+#and then MS2 database search
 
+original_input_mzml = 
+sirius_output_paths= []
+file= MzTab()
+SiriusMzTabWriter().read("sirius_output_paths", original_input_mzml, )
 
+SiriusAdapterHit(             SiriusAdapterRun(             SiriusMzTabWriter(
+SiriusAdapterIdentification(  SiriusMSFile( 
+
+     read(...)void read(libcpp_vector[String] sirius_output_paths, 
+                    String original_input_mzml, size_t top_n_hits, MzTab & result)
