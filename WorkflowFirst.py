@@ -10,16 +10,6 @@ print("loading")
 MzMLFile().load("WGS14_standard_POS_005_noncentroid.mzML", exp)   #or MzMLFile().load(sys.argv[1].exp)
 print("loaded")
 
-options = PeakFileOptions()
-options.setMSLevels([1])
-fh = MzMLFile()
-fh.setOptions(options)
-
-exp = MSExperiment()
-
-import sys
-MzMLFile().load(sys.argv[1], exp)
-
 feature_map = FeatureMap()
 mass_traces = []
 mass_traces_split = []
@@ -58,11 +48,10 @@ for p in feature_map:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
 deconv = MetaboliteFeatureDeconvolution()
-f_out= FeatureMap()
+f_out= FeatureXMLFile()
 cons_map0= ConsensusMap()
 cons_map1= ConsensusMap()
 deconcoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
-
 
 search= AccurateMassSearchEngine()
 parsefiles= search.init() 
@@ -72,7 +61,7 @@ hits= search._run_0(deconcoluted, output)
 #Now I have to add SIRIUS fragmentation trees with seed:accumasssearchengine
 #and then MS2 database search
 
-original_input_mzml = 
+original_input_mzml = "WGS14_standard_POS_005_noncentroid.mzML"
 sirius_output_paths= []
 file= MzTab()
 SiriusMzTabWriter().read("sirius_output_paths", original_input_mzml, )
