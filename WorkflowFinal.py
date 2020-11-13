@@ -58,19 +58,11 @@ parsefiles= search.init()
 output= MzTab()
 hits= search._run_0(deconcoluted, output) 
 
-#new= Feature()
-#FeatureXMLFile().load(output, new)
-
-#Now I have to add SIRIUS fragmentation trees with seed:accumasssearchengine
+#convert mzTab to mzML
+#Add SIRIUS fragmentation trees with seed:accumasssearchengine
 #and then MS2 database search
 
-original_input_mzml = "WGS14_standard_POS_005_noncentroid.mzML"
-sirius_output_paths= []
-file= MzTab()
-SiriusMzTabWriter().read("sirius_output_paths", original_input_mzml, )
-
+"""
 SiriusAdapterHit(             SiriusAdapterRun(             SiriusMzTabWriter(
 SiriusAdapterIdentification(  SiriusMSFile( 
-
-     read(...)void read(libcpp_vector[String] sirius_output_paths, 
-                    String original_input_mzml, size_t top_n_hits, MzTab & result)
+"""
