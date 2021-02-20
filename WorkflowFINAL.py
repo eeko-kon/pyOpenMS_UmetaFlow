@@ -43,13 +43,14 @@ for p in feature_map:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
 
-search= AccurateMassSearchEngine()
+ams= AccurateMassSearchEngine()
 print("start parsing files")
-parsefiles= search.init() 
+parsefiles= ams.init()
 print("parsed mass files")
 mztab_output= MzTab()
 mztab_outfile= MzTabFile()
-hits= search._run_0(feature_map, mztab_output) 
-print("done: hits")
+hits= ams._run_0(feature_map, mztab_output) 
 mztab_outfile.store("out", mztab_output)
+xmlFeat = FeatureXMLFile()
+xmlFeat.store("test.featureXML", feature_map)
 
