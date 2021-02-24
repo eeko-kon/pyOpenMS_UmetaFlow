@@ -7,7 +7,7 @@ exp = MSExperiment()
 
 import sys
 print("Loading")
-MzMLFile().load(sys.argv[1], exp)
+MzMLFile().load("GermicidinAstandard.mzML", exp)
 print("Loaded")
 
 feature_map = FeatureMap()
@@ -41,3 +41,21 @@ fh.store('FeatureFindingMetabo.featureXML', feature_map)
 for p in feature_map:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
+deconv = MetaboliteFeatureDeconvolution()
+f_out= FeatureMap()
+cons_map0= ConsensusMap()
+cons_map1= ConsensusMap()
+deconvoluted= deconv.compute(feature_map, f_out, cons_map0, cons_map1)
+deconvol = FeatureXMLFile()
+deconvol.store("devoncoluted.featureXML", feature_map)
+Sirius= SiriusMSFile()
+sirius= MSExperiment()
+feature_only= FeatureXMLFile() #?
+#bool no_mt_info??
+compoundinfo= SiriusMSFile()
+Sirius.store(exp, sirius, feature_map, feature_only, 10, #noideahere, compoundinfo)
+
+#Cython signature: void store(MSExperiment & spectra, String & msfile,
+#FeatureMapping_FeatureToMs2Indices & feature_ms2_spectra_map, bool & feature_only, 
+#int & isotope_pattern_iterations, bool no_mt_info, 
+#libcpp_vector[SiriusMSFile_CompoundInfo] v_cmpinfo)

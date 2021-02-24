@@ -1,14 +1,10 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": "Users/eeko/py4e"
 		},
-		{
-			"name": "SSH FS - sharedmachine",
-			"uri": "ssh://sharedmachine/"
-		}
 	],
 	"settings": {
-		"python.pythonPath": "/Users/eeko/opt/anaconda3/envs/py3_knime/bin/python"
+		"python.pythonPath": "/Users/eeko/opt/anaconda3/bin/python"
 	}
 }
