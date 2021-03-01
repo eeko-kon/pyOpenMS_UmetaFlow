@@ -51,7 +51,7 @@ deconvol.store("devoncoluted.featureXML", feature_map)
 
 Sirius= SiriusMSFile()
 argument1= exp 
-argument2= SiriusTemporaryFileSystemObjects.getTmpMsFile()
+argument2= "siriustest.ms"
 argument3= FeatureMapping_FeatureToMs2Indices()
 feature_only= True #SiriusAdapterAlgorithm.getFeatureOnly()==True
 #this is a parameter, which is called "feature_only" 
@@ -65,10 +65,31 @@ Isotope_iter= 3 #SiriusAdapterAlgorithm.getIsotopePatternIterations()
 Isotopemasstraceinfo= False #This boolean value can lead to discarding the masstrace information from a feature and will usethe isotope_pattern_iterations instead -> so in your case it should be false - since you would like to use to feature information. 
 #SiriusAdapterAlgorithm.getNoMasstraceInfoIsotopePattern() == False
 CompoundInfo= [] #SiriusMSFile_CompoundInfo()
-Sirius.store(exp, argument2, argument3, feature_only, True, 3, False, CompoundInfo)
+Sirius.store(exp, argument2, argument3, feature_only, 3, False, CompoundInfo)
 
 #Cython signature: void store
 #(MSExperiment & spectra, String & msfile,
 # FeatureMapping_FeatureToMs2Indices & feature_ms2_spectra_map, bool & feature_only, 
 # int & isotope_pattern_iterations, bool no_mt_info, 
 # libcpp_vector[SiriusMSFile_CompoundInfo] v_cmpinfo)
+
+"""
+feature_mapping= FeatureMapping_FeatureToMs2Indices()
+sirius_algo =SiriusAdapterAlgorithm()
+SiriusAdapterAlgorithm.checkFeatureSpectraNumber(deconv, feature_mapping, exp, sirius_algo)
+
+
+checkFeatureSpectraNumber(...)
+    Cython signature: void checkFeatureSpectraNumber(String featureinfo, 
+    FeatureMapping_FeatureToMs2Indices feature_mapping, 
+    MSExperiment spectra, 
+    SiriusAdapterAlgorithm sirius_algo)
+
+logs number of features and spectra used
+Prints the number of features and spectra used (OPENMS_LOG_INFO)
+Parameters
+featureinfo	Path to featureXML
+feature_mapping	FeatureToMs2Indices with feature mapping
+spectra	Input of MSExperiment with spectra information
+sirius_algo	Parameters needed for preprocessing
+"""
