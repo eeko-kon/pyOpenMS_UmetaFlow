@@ -49,36 +49,47 @@ deconvoluted = deconv.compute(feature_map, f_out, cons_map0, cons_map1)
 deconvol = FeatureXMLFile()
 deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map)
 
+# TODO: Add preprocessing here! To use the featureMapping! 
+# https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L193
+featureinfo= "./wf_testing/devoncoluted.featureXML"
+spectra= exp
+v_fp= []
+fp_map_kd= KDTreeFeatureMaps()
+sirius_algo= SiriusAdapterAlgorithm()
+feature_mapping = FeatureMapping_FeatureToMs2Indices() 
+sirius_algo.preprocessingSirius(featureinfo,
+                                spectra,
+                                v_fp,
+                                fp_map_kd,
+                                sirius_algo,
+                                feature_mapping)
+# TODO: Check feature and/or spectra number
+# https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L201
+sirius_algo.checkFeatureSpectraNumber(featureinfo,
+                                    feature_mapping,
+                                    spectra,
+                                    sirius_algo)
+# construct sirius ms file object
+msfile = SiriusMSFile()
 # create temporary filesystem objects
 debug_level = 10
 sirius_tmp = SiriusTemporaryFileSystemObjects(debug_level)
 
-# TODO: Add preprocessing here! To use the featureMapping! 
-# https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L193
-
-# TODO: Check feature and/or spectra number
-# https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L201
-
-# construct sirius ms file object
-msfile = SiriusMSFile()
-
 # fill variables, which are used in the function
 # TODO: need to construct the feature mapping 
-feature_mapping = FeatureMapping_FeatureToMs2Indices() 
+#feature_mapping = FeatureMapping_FeatureToMs2Indices() 
 feature_only = True #SiriusAdapterAlgorithm.getFeatureOnly()==True
-isotope_pattern_iterations = 3
-no_mt_info = False
-compound_info = [] #SiriusMSFile_CompoundInfo()
-
 #this is a parameter, which is called "feature_only" 
 #It is a boolean value (true/false) and if it is true you are using the  the feature information 
 #from in_featureinfo to reduce the search space to MS2 associated with a feature.
 #this is recommended when working with featureXML input, if you do NOT use it 
 #sirius will use every individual MS2 spectrum for estimation (and it will take ages)
 #bool feature_only = (sirius_algo.getFeatureOnly() == "true") ? true : false;
-#SiriusAdapterAlgorithm.getNoMasstraceInfoIsotopePattern() == False
+isotope_pattern_iterations = 3
+no_mt_info = False #SiriusAdapterAlgorithm.getNoMasstraceInfoIsotopePattern() == False
+compound_info = [] #SiriusMSFile_CompoundInfo()
 
-msfile.store(exp, 
+msfile.store(spectra, 
              String(sirius_tmp.getTmpDir()), # has to be converted to an "OpenMS::String"
              feature_mapping, 
              feature_only,
@@ -86,10 +97,9 @@ msfile.store(exp,
              no_mt_info, 
              compound_info)
 
-#Cython signature: void store
-#(MSExperiment & spectra, String & msfile,
-# FeatureMapping_FeatureToMs2Indices & feature_ms2_spectra_map, bool & feature_only, 
-# int & isotope_pattern_iterations, bool no_mt_info, 
-# libcpp_vector[SiriusMSFile_CompoundInfo] v_cmpinfo)
+#next step:call siriusQprocess
+#SiriusMZtabwriter for storage
+#CSI:FingerID
+
 
 
