@@ -63,7 +63,6 @@ sirius_tmp = SiriusTemporaryFileSystemObjects(debug_level)
 msfile = SiriusMSFile()
 
 # fill variables, which are used in the function
-argument1 = exp 
 # TODO: need to construct the feature mapping 
 feature_mapping = FeatureMapping_FeatureToMs2Indices() 
 feature_only = True #SiriusAdapterAlgorithm.getFeatureOnly()==True
@@ -92,3 +91,5 @@ msfile.store(exp,
 # FeatureMapping_FeatureToMs2Indices & feature_ms2_spectra_map, bool & feature_only, 
 # int & isotope_pattern_iterations, bool no_mt_info, 
 # libcpp_vector[SiriusMSFile_CompoundInfo] v_cmpinfo)
+
+
