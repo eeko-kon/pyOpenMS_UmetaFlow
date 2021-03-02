@@ -101,7 +101,7 @@ msfile.store(spectra,
              isotope_pattern_iterations, 
              no_mt_info, 
              compound_info)
-"""
+
 #next step:call siriusQprocess
 out_csi= CsiFingerIdMzTabWriter()
 out_csifingerid= String(out_csi)
@@ -123,4 +123,3 @@ SiriusMzTabWriter.read(subdirs,
 siriusfile.store("./wf_testing/out_sirius", sirius_result)
 #CSI:FingerID
 #CSI:FingerID
-"""
