@@ -50,6 +50,10 @@ deconvol = FeatureXMLFile()
 deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map)
 
 # TODO: Add preprocessing here! To use the featureMapping! 
+#    run masstrace filter and feature mapping
+#    vector<FeatureMap> v_fp; // copy FeatureMap via push_back
+#   KDTreeFeatureMaps fp_map_kd; // reference to *basefeature in vector<FeatureMap>
+#  FeatureMapping::FeatureToMs2Indices feature_mapping; // reference to *basefeature in vector<FeatureMap>
 # https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L193
 featureinfo= "./wf_testing/devoncoluted.featureXML"
 spectra= exp
@@ -100,6 +104,4 @@ msfile.store(spectra,
 #next step:call siriusQprocess
 #SiriusMZtabwriter for storage
 #CSI:FingerID
-
-
-
+#CSI:FingerID
