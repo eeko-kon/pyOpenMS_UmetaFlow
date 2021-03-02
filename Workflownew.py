@@ -102,6 +102,23 @@ msfile.store(spectra,
              compound_info)
 
 #next step:call siriusQprocess
+out_csi= CsiFingerIdMzTabWriter()
+out_csifingerid= String(out_csi)
+executable= "Users/eeko/Applications/sirius.app"
+subdirs= sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
+                                String(sirius_tmp.getTmpOutDir()),
+                                executable,
+                                out_csifingerid,
+                                sirius_algo)
 #SiriusMZtabwriter for storage
+candidates = sirius_algo.getCandidates()
+sirius_result= MzTab()
+siriusfile= MzTabFile()
+in = "./wf_testing/GermicidinAstandard.mzML"
+SiriusMzTabWriter.read(subdirs,
+                        in,
+                        candidates,
+                        sirius_result)
+siriusfile.store(out_sirius, sirius_result)
 #CSI:FingerID
 #CSI:FingerID
