@@ -7,7 +7,7 @@ exp = MSExperiment()
 
 import sys
 print("Loading")
-MzMLFile().load("./wf_testing/GermicidinAstandard.mzML", exp)
+MzMLFile().load("./Standards/Leupeptin.mzML", exp)
 print("Loaded")
 
 feature_map = FeatureMap()
@@ -67,12 +67,15 @@ sirius_algo.preprocessingSirius(featureinfo,
                                 fp_map_kd,
                                 sirius_algo,
                                 feature_mapping)
+
+print("preprocessed")
 # TODO: Check feature and/or spectra number
 # https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L201
 sirius_algo.checkFeatureSpectraNumber(featureinfo,
                                     feature_mapping,
                                     spectra,
                                     sirius_algo)
+print("checked")
 # construct sirius ms file object
 msfile = SiriusMSFile()
 # create temporary filesystem objects
@@ -101,7 +104,7 @@ msfile.store(spectra,
              isotope_pattern_iterations, 
              no_mt_info, 
              compound_info)
-
+print("stored")
 #next step:call siriusQprocess
 out_csi= CsiFingerIdMzTabWriter()
 out_csifingerid= String(out_csi)
@@ -111,15 +114,19 @@ subdirs= sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                 executable,
                                 out_csifingerid,
                                 sirius_algo)
+print("SIRIUSQprocess")
 #SiriusMZtabwriter for storage
 candidates = sirius_algo.getCandidates()
 sirius_result= MzTab()
 siriusfile= MzTabFile()
-in = "./wf_testing/GermicidinAstandard.mzML"
+input = "./Standards/Leupeptin.mzML"
 SiriusMzTabWriter.read(subdirs,
-                        in,
+                        input,
                         candidates,
                         sirius_result)
+print("storing..")
 siriusfile.store("./wf_testing/out_sirius", sirius_result)
+print("stored")
+
 #CSI:FingerID
 #CSI:FingerID
