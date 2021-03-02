@@ -78,6 +78,7 @@ msfile = SiriusMSFile()
 # create temporary filesystem objects
 debug_level = 10
 sirius_tmp = SiriusTemporaryFileSystemObjects(debug_level)
+siriusstring= String(sirius_tmp.getTmpMsFile())
 
 # fill variables, which are used in the function
 # TODO: need to construct the feature mapping 
@@ -94,13 +95,13 @@ no_mt_info = False #SiriusAdapterAlgorithm.getNoMasstraceInfoIsotopePattern() ==
 compound_info = [] #SiriusMSFile_CompoundInfo()
 
 msfile.store(spectra, 
-             String(sirius_tmp.getTmpDir()), # has to be converted to an "OpenMS::String"
+             siriusstring, # has to be converted to an "OpenMS::String"
              feature_mapping, 
              feature_only,
              isotope_pattern_iterations, 
              no_mt_info, 
              compound_info)
-
+"""
 #next step:call siriusQprocess
 out_csi= CsiFingerIdMzTabWriter()
 out_csifingerid= String(out_csi)
@@ -122,3 +123,4 @@ SiriusMzTabWriter.read(subdirs,
 siriusfile.store("./wf_testing/out_sirius", sirius_result)
 #CSI:FingerID
 #CSI:FingerID
+"""
