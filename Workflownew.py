@@ -119,6 +119,6 @@ SiriusMzTabWriter.read(subdirs,
                         in,
                         candidates,
                         sirius_result)
-siriusfile.store(out_sirius, sirius_result)
+siriusfile.store("./wf_testing/out_sirius", sirius_result)
 #CSI:FingerID
 #CSI:FingerID
