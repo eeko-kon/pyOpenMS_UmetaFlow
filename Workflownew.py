@@ -7,7 +7,7 @@ exp = MSExperiment()
 
 import sys
 print("Loading")
-MzMLFile().load("./Standards/Leupeptin.mzML", exp)
+MzMLFile().load("./wf_testing/GermicidinAstandard.mzML", exp)
 print("Loaded")
 
 feature_map = FeatureMap()
@@ -47,7 +47,7 @@ cons_map0 = ConsensusMap()
 cons_map1 = ConsensusMap()
 deconvoluted = deconv.compute(feature_map, f_out, cons_map0, cons_map1)
 deconvol = FeatureXMLFile()
-deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map)
+deconvol.store("./wf_testing/devoncoluted.featureXML", f_out)
 
 # TODO: Add preprocessing here! To use the featureMapping! 
 #    run masstrace filter and feature mapping
@@ -108,7 +108,7 @@ print("stored")
 #next step:call siriusQprocess
 out_csi= CsiFingerIdMzTabWriter()
 out_csifingerid= String(out_csi)
-executable= "Users/eeko/Applications/sirius.app"
+executable= "Users/eeko/Applications/sirius"
 subdirs= sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                 String(sirius_tmp.getTmpOutDir()),
                                 executable,
@@ -119,7 +119,7 @@ print("SIRIUSQprocess")
 candidates = sirius_algo.getCandidates()
 sirius_result= MzTab()
 siriusfile= MzTabFile()
-input = "./Standards/Leupeptin.mzML"
+input = "./wf_testing/GermicidinAstandard.mzML"
 SiriusMzTabWriter.read(subdirs,
                         input,
                         candidates,
