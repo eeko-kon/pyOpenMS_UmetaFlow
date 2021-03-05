@@ -7,10 +7,10 @@ exp = MSExperiment()
 
 import sys
 print("Loading")
-MzMLFile().load("./wf_testing/GermicidinAstandard.mzML", exp)
+MzMLFile().load("Standards/GermicidinAstandard10e-2.mzML", exp)
 print("Loaded")
 
-feature_map = FeatureMap()
+feature_map_FFM = FeatureMap()
 mass_traces = []
 mass_traces_split = []
 mass_traces_filtered = []
@@ -27,27 +27,27 @@ ElutionPeakDetection().detectPeaks(mass_traces, mass_traces_split)
 
 ff = FeatureFindingMetabo()
 ff.run(mass_traces_split,
-    feature_map,
+    feature_map_FFM,
     mass_traces_filtered)
 
 print('# Mass traces filtered:', len(mass_traces_filtered))
-print('# Features:', feature_map.size())
+print('# Features:', feature_map_FFM.size())
 
-feature_map.setUniqueIds()
+feature_map_FFM.setUniqueIds()
 fh = FeatureXMLFile()
-print("Found", feature_map.size(), "features")
-fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map)
+print("Found", feature_map_FFM.size(), "features")
+fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map_FFM)
 
-for p in feature_map:
+for p in feature_map_FFM:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
 deconv = MetaboliteFeatureDeconvolution()
-f_out = FeatureMap()
+feature_map_DEC = FeatureMap()
 cons_map0 = ConsensusMap()
 cons_map1 = ConsensusMap()
-deconvoluted = deconv.compute(feature_map, f_out, cons_map0, cons_map1)
+deconvoluted = deconv.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 deconvol = FeatureXMLFile()
-deconvol.store("./wf_testing/devoncoluted.featureXML", f_out)
+deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
 # TODO: Add preprocessing here! To use the featureMapping! 
 #    run masstrace filter and feature mapping
@@ -119,7 +119,7 @@ print("SIRIUSQprocess")
 candidates = sirius_algo.getCandidates()
 sirius_result= MzTab()
 siriusfile= MzTabFile()
-input = "./wf_testing/GermicidinAstandard.mzML"
+input = "/Standards/GermicidinAstandard10e-2.mzML"
 SiriusMzTabWriter.read(subdirs,
                         input,
                         candidates,

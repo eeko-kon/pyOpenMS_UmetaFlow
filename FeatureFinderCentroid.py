@@ -8,7 +8,7 @@ Created on Tue Sep  8 13:43:47 2020
 """
 CONVERT RAW TO MZML: FOR ONE FILE
 """
-docker run -it --rm -e WINEDEBUG=-all -v /Users/eeko/Documents/raw_files:/data chambm/pwiz-skyline-i-agree-to-the-vendor-licenses wine msconvert /data/20200723_NBC_UMETAB137_Blank_POS_006.raw --zlib --filter "peakPicking true 1-" --ignoreUnknownInstrumentError
+docker run -it --rm -e WINEDEBUG=-all -v /Users/eeko/Documents/raw_files:/data chambm/pwiz-skyline-i-agree-to-the-vendor-licenses wine msconvert /data/20200723_NBC_UMETAB137_Blank_POS_006.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrumentError
 docker run -it --rm -e WINEDEBUG=-all -v /Users/eeko/Documents/raw_files:/data chambm/pwiz-skyline-i-agree-to-the-vendor-licenses wine msconvert /data/20200723_NBC_UMETAB137_Blank_POS_006.raw --mzML  --ignoreUnknownInstrumentError
 
 """
