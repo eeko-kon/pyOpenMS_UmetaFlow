@@ -5,12 +5,14 @@ from pyopenms import *
 
 exp = MSExperiment()
 
-import sys
 print("Loading")
-MzMLFile().load("./wf_testing/GermicidinAstandard.mzML", exp)
+MzMLFile().load("GandalfNoncentroidGermicidinAstandard10e-4.mzML", exp)
 print("Loaded")
 
-feature_map = FeatureMap()
+#print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
+#print(exp.getSourceFiles()[0].getNativeIDType())
+
+feature_map_FFM = FeatureMap()
 mass_traces = []
 mass_traces_split = []
 mass_traces_filtered = []
@@ -24,32 +26,37 @@ for spec in exp.getSpectra():
 
 MassTraceDetection().run(peak_map, mass_traces, 1000)
 ElutionPeakDetection().detectPeaks(mass_traces, mass_traces_split)
+print(len(mass_traces_split))
 
 ff = FeatureFindingMetabo()
 ff.run(mass_traces_split,
-    feature_map,
+    feature_map_FFM,
     mass_traces_filtered)
 
 print('# Mass traces filtered:', len(mass_traces_filtered))
-print('# Features:', feature_map.size())
+print('# Features:', feature_map_FFM.size())
 
-feature_map.setUniqueIds()
+feature_map_FFM.setUniqueIds()
 fh = FeatureXMLFile()
-print("Found", feature_map.size(), "features")
-fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map)
+print("Found", feature_map_FFM.size(), "features")
+fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map_FFM)
 
-for p in feature_map:
+for p in feature_map_FFM:
     print(p.getRT(), p.getIntensity(), p.getMZ())
 
 deconv = MetaboliteFeatureDeconvolution()
-f_out = FeatureMap()
+feature_map_DEC = FeatureMap()
 cons_map0 = ConsensusMap()
 cons_map1 = ConsensusMap()
-deconvoluted = deconv.compute(feature_map, f_out, cons_map0, cons_map1)
+deconvoluted = deconv.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 deconvol = FeatureXMLFile()
-deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map)
+deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
 # TODO: Add preprocessing here! To use the featureMapping! 
+#    run masstrace filter and feature mapping
+#    vector<FeatureMap> v_fp; // copy FeatureMap via push_back
+#   KDTreeFeatureMaps fp_map_kd; // reference to *basefeature in vector<FeatureMap>
+#  FeatureMapping::FeatureToMs2Indices feature_mapping; // reference to *basefeature in vector<FeatureMap>
 # https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L193
 featureinfo= "./wf_testing/devoncoluted.featureXML"
 spectra= exp
@@ -63,17 +70,21 @@ sirius_algo.preprocessingSirius(featureinfo,
                                 fp_map_kd,
                                 sirius_algo,
                                 feature_mapping)
+
+print("preprocessed")
 # TODO: Check feature and/or spectra number
 # https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L201
 sirius_algo.checkFeatureSpectraNumber(featureinfo,
                                     feature_mapping,
                                     spectra,
                                     sirius_algo)
+print("checked")
 # construct sirius ms file object
 msfile = SiriusMSFile()
 # create temporary filesystem objects
 debug_level = 10
 sirius_tmp = SiriusTemporaryFileSystemObjects(debug_level)
+siriusstring= String(sirius_tmp.getTmpMsFile())
 
 # fill variables, which are used in the function
 # TODO: need to construct the feature mapping 
@@ -90,16 +101,35 @@ no_mt_info = False #SiriusAdapterAlgorithm.getNoMasstraceInfoIsotopePattern() ==
 compound_info = [] #SiriusMSFile_CompoundInfo()
 
 msfile.store(spectra, 
-             String(sirius_tmp.getTmpDir()), # has to be converted to an "OpenMS::String"
+             siriusstring, # has to be converted to an "OpenMS::String"
              feature_mapping, 
              feature_only,
              isotope_pattern_iterations, 
              no_mt_info, 
              compound_info)
-
+print("stored")
 #next step:call siriusQprocess
+out_csi= CsiFingerIdMzTabWriter()
+out_csifingerid= String(out_csi)
+executable= "Users/eeko/Applications/sirius"
+subdirs= sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
+                                String(sirius_tmp.getTmpOutDir()),
+                                executable,
+                                out_csifingerid,
+                                sirius_algo)
+print("SIRIUSQprocess")
 #SiriusMZtabwriter for storage
+candidates = sirius_algo.getCandidates()
+sirius_result= MzTab()
+siriusfile= MzTabFile()
+input = "GandalfNoncentroidGermicidinAstandard10e-4.mzML"
+SiriusMzTabWriter.read(subdirs,
+                        input,
+                        candidates,
+                        sirius_result)
+print("storing..")
+siriusfile.store("./wf_testing/out_sirius", sirius_result)
+print("stored")
+
 #CSI:FingerID
-
-
-
+#CSI:FingerID

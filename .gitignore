@@ -1,2 +1,4 @@
 *.raw
 *.featureXML
+Standards/
+*.mzML
