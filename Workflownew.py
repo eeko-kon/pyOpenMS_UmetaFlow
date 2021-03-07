@@ -8,13 +8,8 @@ exp = MSExperiment()
 print("Loading")
 MzMLFile().load("Standards/ThermocentroidGermicidinAstandard.mzML", exp)
 print("Loaded")
-
-print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
-print(exp.getSourceFiles()[0].getNativeIDType())
-
-
-MzMLFile().load("Standards/GermicidinAstandard10e-2.mzML", exp)
-print("Loaded")
+#print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
+#print(exp.getSourceFiles()[0].getNativeIDType())
 
 feature_map_FFM = FeatureMap()
 mass_traces = []
