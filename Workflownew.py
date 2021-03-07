@@ -6,11 +6,11 @@ from pyopenms import *
 exp = MSExperiment()
 
 print("Loading")
-MzMLFile().load("GandalfNoncentroidGermicidinAstandard10e-4.mzML", exp)
+MzMLFile().load("Standards/ThermocentroidGermicidinAstandard.mzML", exp)
 print("Loaded")
 
-#print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
-#print(exp.getSourceFiles()[0].getNativeIDType())
+print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
+print(exp.getSourceFiles()[0].getNativeIDType())
 
 
 MzMLFile().load("Standards/GermicidinAstandard10e-2.mzML", exp)
@@ -127,7 +127,7 @@ candidates = sirius_algo.getCandidates()
 sirius_result= MzTab()
 siriusfile= MzTabFile()
 
-input = "GandalfNoncentroidGermicidinAstandard10e-4.mzML"
+input = "Standards/ThermocentroidGermicidinAstandard.mzML"
 SiriusMzTabWriter.read(subdirs,
                         input,
                         candidates,
