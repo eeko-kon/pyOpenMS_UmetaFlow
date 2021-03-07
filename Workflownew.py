@@ -12,6 +12,10 @@ print("Loaded")
 #print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
 #print(exp.getSourceFiles()[0].getNativeIDType())
 
+
+MzMLFile().load("Standards/GermicidinAstandard10e-2.mzML", exp)
+print("Loaded")
+
 feature_map_FFM = FeatureMap()
 mass_traces = []
 mass_traces_split = []
@@ -122,6 +126,7 @@ print("SIRIUSQprocess")
 candidates = sirius_algo.getCandidates()
 sirius_result= MzTab()
 siriusfile= MzTabFile()
+
 input = "GandalfNoncentroidGermicidinAstandard10e-4.mzML"
 SiriusMzTabWriter.read(subdirs,
                         input,
