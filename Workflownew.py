@@ -87,13 +87,13 @@ fxml = FeatureXMLFile()
 fxml.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
 
-# Prepare sirius parameters 
+# Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
-sirius_algo_par = sirius_algo.getDefaults()
-sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) # need at least 3 mass traces (for testing)
-sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
-sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
-sirius_algo.setParameters(sirius_algo_par)
+#sirius_algo_par = SiriusAdapterAlgorithm().getDefaults()
+#sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) # need at least 3 mass traces (for testing)
+#sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
+#sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
+#sirius_algo.setParameters(sirius_algo_par)
 
 
 # TODO: Add preprocessing here! To use the featureMapping! 
