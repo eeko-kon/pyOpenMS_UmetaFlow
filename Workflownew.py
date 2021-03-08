@@ -37,7 +37,7 @@ mtd.run(peak_map, mass_traces, 1000)
 epd = ElutionPeakDetection()
 epd_par = epd.getDefaults()
 # set additional parameter values
-epd_par.setValue("mass_error_ppm", 10.0)
+
 #
 epd.setParameters(epd_par)
 epd.detectPeaks(mass_traces, mass_traces_split)
@@ -48,7 +48,7 @@ print(len(mass_traces_split))
 ffm = FeatureFindingMetabo()
 ffm_par = ffm.getDefaults()
 # set additional parameter values
-ffm_par.setValue("mass_error_ppm", 10.0)
+
 #
 ffm.setParameters(ffm_par)
 ffm.run(mass_traces_split,
@@ -72,9 +72,11 @@ fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map_FFM)
 mfd = MetaboliteFeatureDeconvolution()
 mdf_par = mfd.getDefaults()
 # set additional parameter values
+potential_adducts = [b"H:+:0.6",b"Na:+:0.2",b"K:+:0.2"]
 
-mdf_par.setValue("potential_adducts", StringList(b"H:+:0.6,Na:+:0.2,K:+:0.2"))
+mdf_par.setValue("potential_adducts", potential_adducts)
 #
+print(mdf_par.getValue("potential_adducts")) # test if adducts have been set correctly
 mfd.setParameters(mdf_par)
 
 feature_map_DEC = FeatureMap()
@@ -83,6 +85,15 @@ cons_map1 = ConsensusMap()
 mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 fxml = FeatureXMLFile()
 fxml.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
+
+
+# Prepare sirius parameters 
+sirius_algo = SiriusAdapterAlgorithm()
+sirius_algo_par = sirius_algo.getDefaults()
+sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) # need at least 3 mass traces (for testing)
+sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
+sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
+sirius_algo.setParameters(sirius_algo_par)
 
 
 # TODO: Add preprocessing here! To use the featureMapping! 
@@ -95,7 +106,6 @@ featureinfo= "./wf_testing/devoncoluted.featureXML"
 spectra= exp
 v_fp= []
 fp_map_kd= KDTreeFeatureMaps()
-sirius_algo= SiriusAdapterAlgorithm()
 feature_mapping = FeatureMapping_FeatureToMs2Indices() 
 sirius_algo.preprocessingSirius(featureinfo,
                                 spectra,
