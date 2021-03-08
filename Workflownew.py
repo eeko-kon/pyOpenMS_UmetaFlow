@@ -23,12 +23,35 @@ for chrom in exp.getChromatograms():
 for spec in exp.getSpectra():
     peak_map.addSpectrum(spec)
 
-MassTraceDetection().run(peak_map, mass_traces, 1000)
-ElutionPeakDetection().detectPeaks(mass_traces, mass_traces_split)
+# Run mass trace detection
+mtd = MassTraceDetection()
+mtd_par = mtd.getDefaults()
+# set addition parameters values
+mtd_par.setValue("mass_error_ppm", 10.0) # example set ppm error
+#
+mtd.setParameters(mtd_par)
+print(mtd_par.getValue("mass_error_ppm")) # example check a specific value
+mtd.run(peak_map, mass_traces, 1000)
+
+# Run elution peak detection
+epd = ElutionPeakDetection()
+epd_par = epd.getDefaults()
+# set additional parameter values
+epd_par.setValue("mass_error_ppm", 10.0)
+#
+epd.setParameters(epd_par)
+epd.detectPeaks(mass_traces, mass_traces_split)
+
 print(len(mass_traces_split))
 
-ff = FeatureFindingMetabo()
-ff.run(mass_traces_split,
+
+ffm = FeatureFindingMetabo()
+ffm_par = ffm.getDefaults()
+# set additional parameter values
+ffm_par.setValue("mass_error_ppm", 10.0)
+#
+ffm.setParameters(ffm_par)
+ffm.run(mass_traces_split,
     feature_map_FFM,
     mass_traces_filtered)
 
@@ -50,6 +73,7 @@ cons_map1 = ConsensusMap()
 deconvoluted = deconv.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 deconvol = FeatureXMLFile()
 deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
+
 
 # TODO: Add preprocessing here! To use the featureMapping! 
 #    run masstrace filter and feature mapping
@@ -106,6 +130,7 @@ msfile.store(spectra,
              isotope_pattern_iterations, 
              no_mt_info, 
              compound_info)
+
 print("stored")
 #next step:call siriusQprocess
 out_csi= CsiFingerIdMzTabWriter()
