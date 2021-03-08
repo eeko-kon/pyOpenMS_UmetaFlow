@@ -63,16 +63,26 @@ fh = FeatureXMLFile()
 print("Found", feature_map_FFM.size(), "features")
 fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map_FFM)
 
-for p in feature_map_FFM:
-    print(p.getRT(), p.getIntensity(), p.getMZ())
+# output all traces in the feature map
+# for p in feature_map_FFM:
+#     print(p.getRT(), p.getIntensity(), p.getMZ())
 
-deconv = MetaboliteFeatureDeconvolution()
+# Run metabolite adduct decharging detection
+# With SIRIUS you are only able to use singly charged adducts
+mfd = MetaboliteFeatureDeconvolution()
+mdf_par = mfd.getDefaults()
+# set additional parameter values
+
+mdf_par.setValue("potential_adducts", StringList(b"H:+:0.6,Na:+:0.2,K:+:0.2"))
+#
+mfd.setParameters(mdf_par)
+
 feature_map_DEC = FeatureMap()
 cons_map0 = ConsensusMap()
 cons_map1 = ConsensusMap()
-deconvoluted = deconv.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
-deconvol = FeatureXMLFile()
-deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
+mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
+fxml = FeatureXMLFile()
+fxml.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
 
 # TODO: Add preprocessing here! To use the featureMapping! 
