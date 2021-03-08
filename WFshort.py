@@ -8,8 +8,6 @@ exp = MSExperiment()
 print("Loading")
 MzMLFile().load("Standards/ThermocentroidGermicidinAstandard.mzML", exp)
 print("Loaded")
-#print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
-#print(exp.getSourceFiles()[0].getNativeIDType())
 
 feature_map_FFM = FeatureMap()
 mass_traces = []
@@ -51,12 +49,6 @@ deconvoluted = deconv.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_
 deconvol = FeatureXMLFile()
 deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
-# TODO: Add preprocessing here! To use the featureMapping! 
-#    run masstrace filter and feature mapping
-#    vector<FeatureMap> v_fp; // copy FeatureMap via push_back
-#   KDTreeFeatureMaps fp_map_kd; // reference to *basefeature in vector<FeatureMap>
-#  FeatureMapping::FeatureToMs2Indices feature_mapping; // reference to *basefeature in vector<FeatureMap>
-# https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L193
 featureinfo= "./wf_testing/devoncoluted.featureXML"
 spectra= exp
 v_fp= []
@@ -71,43 +63,31 @@ sirius_algo.preprocessingSirius(featureinfo,
                                 feature_mapping)
 
 print("preprocessed")
-# TODO: Check feature and/or spectra number
-# https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L201
+
 sirius_algo.checkFeatureSpectraNumber(featureinfo,
                                     feature_mapping,
                                     spectra,
                                     sirius_algo)
 print("checked")
-# construct sirius ms file object
+
 msfile = SiriusMSFile()
-# create temporary filesystem objects
 debug_level = 10
 sirius_tmp = SiriusTemporaryFileSystemObjects(debug_level)
 siriusstring= String(sirius_tmp.getTmpMsFile())
 
-# fill variables, which are used in the function
-# TODO: need to construct the feature mapping 
-#feature_mapping = FeatureMapping_FeatureToMs2Indices() 
-feature_only = True #SiriusAdapterAlgorithm.getFeatureOnly()==True
-#this is a parameter, which is called "feature_only" 
-#It is a boolean value (true/false) and if it is true you are using the  the feature information 
-#from in_featureinfo to reduce the search space to MS2 associated with a feature.
-#this is recommended when working with featureXML input, if you do NOT use it 
-#sirius will use every individual MS2 spectrum for estimation (and it will take ages)
-#bool feature_only = (sirius_algo.getFeatureOnly() == "true") ? true : false;
+feature_only = True 
 isotope_pattern_iterations = 3
-no_mt_info = False #SiriusAdapterAlgorithm.getNoMasstraceInfoIsotopePattern() == False
-compound_info = [] #SiriusMSFile_CompoundInfo()
+no_mt_info = False 
+compound_info = []
 
 msfile.store(spectra, 
-             siriusstring, # has to be converted to an "OpenMS::String"
+             siriusstring, 
              feature_mapping, 
              feature_only,
              isotope_pattern_iterations, 
              no_mt_info, 
              compound_info)
 print("stored")
-#next step:call siriusQprocess
 out_csi= CsiFingerIdMzTabWriter()
 out_csifingerid= String(out_csi)
 executable= "Users/eeko/Applications/sirius"
@@ -117,11 +97,9 @@ subdirs= sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                 out_csifingerid,
                                 sirius_algo)
 print("SIRIUSQprocess")
-#SiriusMZtabwriter for storage
 candidates = sirius_algo.getCandidates()
 sirius_result= MzTab()
 siriusfile= MzTabFile()
-
 input = "Standards/ThermocentroidGermicidinAstandard.mzML"
 SiriusMzTabWriter.read(subdirs,
                         input,
@@ -130,5 +108,3 @@ SiriusMzTabWriter.read(subdirs,
 print("storing..")
 siriusfile.store("./wf_testing/out_sirius", sirius_result)
 print("stored")
-
-#CSI:FingerID
