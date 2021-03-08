@@ -23,12 +23,35 @@ for chrom in exp.getChromatograms():
 for spec in exp.getSpectra():
     peak_map.addSpectrum(spec)
 
-MassTraceDetection().run(peak_map, mass_traces, 1000)
-ElutionPeakDetection().detectPeaks(mass_traces, mass_traces_split)
+# Run mass trace detection
+mtd = MassTraceDetection()
+mtd_par = mtd.getDefaults()
+# set addition parameters values
+mtd_par.setValue("mass_error_ppm", 10.0) # example set ppm error
+#
+mtd.setParameters(mtd_par)
+print(mtd_par.getValue("mass_error_ppm")) # example check a specific value
+mtd.run(peak_map, mass_traces, 1000)
+
+# Run elution peak detection
+epd = ElutionPeakDetection()
+epd_par = epd.getDefaults()
+# set additional parameter values
+
+#
+epd.setParameters(epd_par)
+epd.detectPeaks(mass_traces, mass_traces_split)
+
 print(len(mass_traces_split))
 
-ff = FeatureFindingMetabo()
-ff.run(mass_traces_split,
+
+ffm = FeatureFindingMetabo()
+ffm_par = ffm.getDefaults()
+# set additional parameter values
+
+#
+ffm.setParameters(ffm_par)
+ffm.run(mass_traces_split,
     feature_map_FFM,
     mass_traces_filtered)
 
@@ -40,16 +63,38 @@ fh = FeatureXMLFile()
 print("Found", feature_map_FFM.size(), "features")
 fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map_FFM)
 
-for p in feature_map_FFM:
-    print(p.getRT(), p.getIntensity(), p.getMZ())
+# output all traces in the feature map
+# for p in feature_map_FFM:
+#     print(p.getRT(), p.getIntensity(), p.getMZ())
 
-deconv = MetaboliteFeatureDeconvolution()
+# Run metabolite adduct decharging detection
+# With SIRIUS you are only able to use singly charged adducts
+mfd = MetaboliteFeatureDeconvolution()
+mdf_par = mfd.getDefaults()
+# set additional parameter values
+potential_adducts = [b"H:+:0.6",b"Na:+:0.2",b"K:+:0.2"]
+
+mdf_par.setValue("potential_adducts", potential_adducts)
+#
+print(mdf_par.getValue("potential_adducts")) # test if adducts have been set correctly
+mfd.setParameters(mdf_par)
+
 feature_map_DEC = FeatureMap()
 cons_map0 = ConsensusMap()
 cons_map1 = ConsensusMap()
-deconvoluted = deconv.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
-deconvol = FeatureXMLFile()
-deconvol.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
+mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
+fxml = FeatureXMLFile()
+fxml.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
+
+
+# Prepare sirius parameters
+sirius_algo = SiriusAdapterAlgorithm()
+#sirius_algo_par = SiriusAdapterAlgorithm().getDefaults()
+#sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) # need at least 3 mass traces (for testing)
+#sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
+#sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
+#sirius_algo.setParameters(sirius_algo_par)
+
 
 # TODO: Add preprocessing here! To use the featureMapping! 
 #    run masstrace filter and feature mapping
@@ -61,7 +106,6 @@ featureinfo= "./wf_testing/devoncoluted.featureXML"
 spectra= exp
 v_fp= []
 fp_map_kd= KDTreeFeatureMaps()
-sirius_algo= SiriusAdapterAlgorithm()
 feature_mapping = FeatureMapping_FeatureToMs2Indices() 
 sirius_algo.preprocessingSirius(featureinfo,
                                 spectra,
@@ -106,6 +150,7 @@ msfile.store(spectra,
              isotope_pattern_iterations, 
              no_mt_info, 
              compound_info)
+
 print("stored")
 #next step:call siriusQprocess
 out_csi= CsiFingerIdMzTabWriter()
