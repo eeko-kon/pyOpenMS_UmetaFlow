@@ -12,3 +12,5 @@
 #mzml convert: MS1 and MS2 converted to centroid
 
 #FileFiltered : all files have negative intensities (from Thermo) and had to be filtered through OpenMS to only keep positive ones.
+
+##KNIME test workflow also added
