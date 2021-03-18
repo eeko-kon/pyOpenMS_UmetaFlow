@@ -5,6 +5,6 @@
 		},
 	],
 	"settings": {
-		"python.pythonPath": "/Users/eeko/opt/anaconda3/bin/python"
+		"python.venvPath": "/Users/eeko/Anaconda3/envs"
 	}
 }

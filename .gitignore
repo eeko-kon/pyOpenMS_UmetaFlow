@@ -2,3 +2,5 @@
 *.featureXML
 Standards/
 *.mzML
+*.bmp
+*.csv

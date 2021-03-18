@@ -15,7 +15,8 @@ docker run -it --rm -e WINEDEBUG=-all -v /Users/eeko/Documents/raw_files:/data c
 FOR THE WHOLE FOLDER
 """
 docker run -it --rm -e WINEDEBUG=-all -v /Users/eeko/Documents/raw_files:/data chambm/pwiz-skyline-i-agree-to-the-vendor-licenses wine msconvert /data/\*.raw --filter "peakPicking true 1-" --ignoreUnknownInstrumentError
-
+Removing negative values example:
+/Applications/OpenMS-2.6.0/bin/FileFilter -in /Volumes/cfb/CFB-S-NewBioactiveCompounds/00_Personal-FoldersStaff/eeko\ -\ Efi\ Kontou/workflowaccumasssearchdata/GUIconverted\ MS1centroid/Leupeptin.mzML -int "0:" -out /Volumes/cfb/CFB-S-NewBioactiveCompounds/00_Personal-FoldersStaff/eeko\ -\ Efi\ Kontou/workflowaccumasssearchdata/GUIconverted\ MS1centroid/LeupeptinFiltered.mzML
 """Copy a file in the 10.75.1.39 shared machine:
 scp /Users/eeko/Documents/raw_files/20200723_NBC_UMETAB137_Blank_POS_006.mzML eeko@10.75.1.39:.
 """

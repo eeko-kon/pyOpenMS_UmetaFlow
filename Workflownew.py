@@ -6,7 +6,7 @@ from pyopenms import *
 exp = MSExperiment()
 
 print("Loading")
-MzMLFile().load("Standards/ThermocentroidGermicidinAstandard.mzML", exp)
+MzMLFile().load("data Thermo Orbitrap ID-X/FileFiltered Std/ThermocentroidpentamycinFileFilter.mzML", exp)
 print("Loaded")
 #print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
 #print(exp.getSourceFiles()[0].getNativeIDType())
@@ -28,7 +28,8 @@ mtd = MassTraceDetection()
 mtd_par = mtd.getDefaults()
 # set addition parameters values
 mtd_par.setValue("mass_error_ppm", 10.0) # example set ppm error
-#
+mtd_par.setValue("noise_threshold_int", 10.0)
+
 mtd.setParameters(mtd_par)
 print(mtd_par.getValue("mass_error_ppm")) # example check a specific value
 mtd.run(peak_map, mass_traces, 1000)
@@ -37,8 +38,7 @@ mtd.run(peak_map, mass_traces, 1000)
 epd = ElutionPeakDetection()
 epd_par = epd.getDefaults()
 # set additional parameter values
-
-#
+epd_par.setValue("width_filtering", "fixed")
 epd.setParameters(epd_par)
 epd.detectPeaks(mass_traces, mass_traces_split)
 
@@ -46,9 +46,9 @@ print(len(mass_traces_split))
 
 
 ffm = FeatureFindingMetabo()
-ffm_par = ffm.getDefaults()
+ffm_par = ffm.getDefaults() 
 # set additional parameter values
-
+ffm_par.setValue("isotope_filtering_model", "none")
 #
 ffm.setParameters(ffm_par)
 ffm.run(mass_traces_split,
@@ -73,9 +73,7 @@ mfd = MetaboliteFeatureDeconvolution()
 mdf_par = mfd.getDefaults()
 # set additional parameter values
 potential_adducts = [b"H:+:0.6",b"Na:+:0.2",b"K:+:0.2"]
-
 mdf_par.setValue("potential_adducts", potential_adducts)
-#
 print(mdf_par.getValue("potential_adducts")) # test if adducts have been set correctly
 mfd.setParameters(mdf_par)
 
@@ -167,7 +165,7 @@ candidates = sirius_algo.getCandidates()
 sirius_result= MzTab()
 siriusfile= MzTabFile()
 
-input = "Standards/ThermocentroidGermicidinAstandard.mzML"
+input = "data Thermo Orbitrap ID-X/FileFiltered Std/ThermocentroidpentamycinFileFilter.mzML"
 SiriusMzTabWriter.read(subdirs,
                         input,
                         candidates,
