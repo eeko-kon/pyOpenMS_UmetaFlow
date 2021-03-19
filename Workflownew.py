@@ -72,8 +72,10 @@ fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map_FFM)
 mfd = MetaboliteFeatureDeconvolution()
 mdf_par = mfd.getDefaults()
 # set additional parameter values
-potential_adducts = [b"H:+:0.6",b"Na:+:0.2",b"K:+:0.2"]
+potential_adducts = [b"H:+:0.6",b"Na:+:0.2",b"NH4:+:0.1", b"K:+:0.1"]
 mdf_par.setValue("potential_adducts", potential_adducts)
+mdf_par.setValue("charge_min", 1, "Minimal possible charge")
+mdf_par.setValue("charge_max", 2, "Maximal possible charge")
 print(mdf_par.getValue("potential_adducts")) # test if adducts have been set correctly
 mfd.setParameters(mdf_par)
 
