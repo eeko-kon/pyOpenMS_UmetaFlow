@@ -3,10 +3,11 @@
 #import pyopenms 
 from pyopenms import *
 
-"""
+input_mzML = "test_standard/ThermoCentroidGermicidinAstandard_FileFilter.mzML"
+
 exp = MSExperiment()
 print("Loading")
-MzMLFile().load("test_standard/ThermoCentroidGermicidinAstandard_FileFilter.mzML", exp)
+MzMLFile().load(input_mzML, exp)
 print("Loaded")
 print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
 print(exp.getSourceFiles()[0].getNativeIDType())
@@ -77,8 +78,9 @@ cons_map1 = ConsensusMap()
 mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 fxml = FeatureXMLFile()
 fxml.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
-"""
 
+"""
+# For internal testing with OpenMS SIRIUS testdata
 exp = MSExperiment()
 MzMLFile().load("/mnt/e/debian_prog/OpenMS/src/tests/topp/THIRDPARTY/SiriusAdapter_2_input.mzML", exp)
 print("Loaded")
@@ -86,6 +88,7 @@ print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
 print(exp.getSourceFiles()[0].getNativeIDType())
 
 featureinfo = "/mnt/e/debian_prog/OpenMS/src/tests/topp/THIRDPARTY/SiriusAdapter_2_input.featureXML"
+"""
 
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
@@ -99,32 +102,30 @@ sirius_algo_par.setValue("sirius:db", "all")
 sirius_algo_par.setValue("project:processors", 2)
 sirius_algo.setParameters(sirius_algo_par)
 
-# featureinfo = "./wf_testing/devoncoluted.featureXML"
-v_fp = []
-fp_map_kd = KDTreeFeatureMaps()
+featureinfo = "./wf_testing/devoncoluted.featureXML"
+fm_info = FeatureMapping_FeatureMappingInfo()
 feature_mapping = FeatureMapping_FeatureToMs2Indices() 
 sirius_algo.preprocessingSirius(featureinfo,
                                 exp,
-                                v_fp,
-                                fp_map_kd,
+                                fm_info,
                                 feature_mapping)
 
-print(feature_mapping)
-print(v_fp[0].size())
-for element in v_fp[0]:
-    print(element.metaValueExists(b"masstrace_centroid_mz"))
+#print(feature_mapping)
+#print(v_fp[0].size())
+#for element in v_fp[0]:
+#    print(element.metaValueExists(b"masstrace_centroid_mz"))
 
 print("preprocessed")
 # Check feature and/or spectra number
 # https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L201
-sirius_algo.logFeatureSpectraNumber(featureinfo,
+sirius_algo.logFeatureSpectraNumber(featureinfo, 
                                     feature_mapping,
                                     exp)
 
-print(feature_mapping)
-print(v_fp[0].size())
-for element in v_fp[0]:
-    print(element.metaValueExists(b"masstrace_centroid_mz"))
+#print(feature_mapping)
+#print(v_fp[0].size())
+#for element in v_fp[0]:
+#    print(element.metaValueExists(b"masstrace_centroid_mz"))
 
 print("checked")
 
@@ -157,34 +158,25 @@ msfile.store(exp,
 
 print("stored")
 
-for element in v_fp:
-    print(element)
-
-"""
 #next step:call siriusQprocess
-out_csi= CsiFingerIdMzTabWriter()
-out_csifingerid= String(out_csi)
-executable= "Users/eeko/Applications/sirius"
-subdirs= sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
-                                String(sirius_tmp.getTmpOutDir()),
-                                executable,
-                                out_csifingerid,
-                                sirius_algo)
+out_csifingerid = "" # empty string, since no file was specified - no CSIFingerId Output will be generated
+executable= "/home/pancake/software/THIRDPARTY/Linux/64bit/Sirius/sirius"
+subdirs = sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
+                                         String(sirius_tmp.getTmpOutDir()),
+                                         String(executable),
+                                         String(out_csifingerid),
+                                         False) # debug option not yet implemented
 print("SIRIUSQprocess")
 #SiriusMZtabwriter for storage
-candidates = sirius_algo.getCandidates()
-sirius_result= MzTab()
-siriusfile= MzTabFile()
-
-input = "data Thermo Orbitrap ID-X/FileFiltered Std/ThermocentroidpentamycinFileFilter.mzML"
+candidates = sirius_algo.getNumberOfSiriusCandidates()
+sirius_result = MzTab()
+siriusfile = MzTabFile()
 SiriusMzTabWriter.read(subdirs,
-                        input,
+                        input_mzML,
                         candidates,
                         sirius_result)
 print("storing..")
-siriusfile.store("./wf_testing/out_sirius", sirius_result)
+siriusfile.store("./wf_testing/out_sirius_test.mzTab", sirius_result)
 print("stored")
 
 #CSI:FingerID
-
-"""
