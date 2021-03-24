@@ -3,7 +3,7 @@
 #import pyopenms 
 from pyopenms import *
 
-input_mzML = "test_standard/ThermoCentroidGermicidinAstandard_FileFilter.mzML"
+input_mzML = "Standards/ThermoCentroidGermicidinAstandard_FileFilter.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -79,17 +79,6 @@ mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 fxml = FeatureXMLFile()
 fxml.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
-"""
-# For internal testing with OpenMS SIRIUS testdata
-exp = MSExperiment()
-MzMLFile().load("/mnt/e/debian_prog/OpenMS/src/tests/topp/THIRDPARTY/SiriusAdapter_2_input.mzML", exp)
-print("Loaded")
-print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
-print(exp.getSourceFiles()[0].getNativeIDType())
-
-featureinfo = "/mnt/e/debian_prog/OpenMS/src/tests/topp/THIRDPARTY/SiriusAdapter_2_input.featureXML"
-"""
-
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
 sirius_algo_par = sirius_algo.getDefaults()
@@ -110,22 +99,12 @@ sirius_algo.preprocessingSirius(featureinfo,
                                 fm_info,
                                 feature_mapping)
 
-#print(feature_mapping)
-#print(v_fp[0].size())
-#for element in v_fp[0]:
-#    print(element.metaValueExists(b"masstrace_centroid_mz"))
-
 print("preprocessed")
 # Check feature and/or spectra number
 # https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L201
 sirius_algo.logFeatureSpectraNumber(featureinfo, 
                                     feature_mapping,
                                     exp)
-
-#print(feature_mapping)
-#print(v_fp[0].size())
-#for element in v_fp[0]:
-#    print(element.metaValueExists(b"masstrace_centroid_mz"))
 
 print("checked")
 
@@ -160,7 +139,7 @@ print("stored")
 
 #next step:call siriusQprocess
 out_csifingerid = "" # empty string, since no file was specified - no CSIFingerId Output will be generated
-executable= "/home/pancake/software/THIRDPARTY/Linux/64bit/Sirius/sirius"
+executable= "/Users/alka/Documents/work/software/use_update_THIRDPARTY/THIRDPARTY/MacOS/64bit/Sirius/sirius"
 subdirs = sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                          String(sirius_tmp.getTmpOutDir()),
                                          String(executable),
