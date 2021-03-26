@@ -1,40 +1,34 @@
-import numpy as np 
-import pandas as pd
-import pyopenms 
+#import numpy as np 
+#import pandas as pd
+#import pyopenms 
 from pyopenms import *
 
+input_mzML = "Standards/ThermoCentroidGermicidinAstandard_FileFilter.mzML"
+
 exp = MSExperiment()
-
 print("Loading")
-MzMLFile().load("data Thermo Orbitrap ID-X/FileFiltered Std/ThermocentroidpentamycinFileFilter.mzML", exp)
+MzMLFile().load(input_mzML, exp)
 print("Loaded")
-#print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
-#print(exp.getSourceFiles()[0].getNativeIDType())
+print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
+print(exp.getSourceFiles()[0].getNativeIDType())
 
-feature_map_FFM = FeatureMap()
-mass_traces = []
-mass_traces_split = []
-mass_traces_filtered = []
-
-peak_map = PeakMap()
-for chrom in exp.getChromatograms():
-    peak_map.addChromatogram(chrom)
-
-for spec in exp.getSpectra():
-    peak_map.addSpectrum(spec)
+# sorty my m/z
+exp.sortSpectra(True)
 
 # Run mass trace detection
+mass_traces = []
 mtd = MassTraceDetection()
 mtd_par = mtd.getDefaults()
 # set addition parameters values
 mtd_par.setValue("mass_error_ppm", 10.0) # example set ppm error
 mtd_par.setValue("noise_threshold_int", 10.0)
-
 mtd.setParameters(mtd_par)
 print(mtd_par.getValue("mass_error_ppm")) # example check a specific value
-mtd.run(peak_map, mass_traces, 1000)
+mtd.run(exp, mass_traces, 0)  # 0 is default and does not restrict found mass traces
 
 # Run elution peak detection
+mass_traces_split = []
+mass_traces_final = []
 epd = ElutionPeakDetection()
 epd_par = epd.getDefaults()
 # set additional parameter values
@@ -42,20 +36,22 @@ epd_par.setValue("width_filtering", "fixed")
 epd.setParameters(epd_par)
 epd.detectPeaks(mass_traces, mass_traces_split)
 
-print(len(mass_traces_split))
+if (epd.getParameters().getValue("width_filtering") == "auto"):
+    epd.filterByPeakWidth(mass_traces_split, mass_traces_final)
+else:
+    mass_traces_final = mass_traces_split
 
-
+# Run feature detection
+feature_map_FFM = FeatureMap()
+feat_chrom = []
 ffm = FeatureFindingMetabo()
 ffm_par = ffm.getDefaults() 
 # set additional parameter values
 ffm_par.setValue("isotope_filtering_model", "none")
-#
 ffm.setParameters(ffm_par)
-ffm.run(mass_traces_split,
-    feature_map_FFM,
-    mass_traces_filtered)
+ffm.run(mass_traces_final, feature_map_FFM, feat_chrom)
 
-print('# Mass traces filtered:', len(mass_traces_filtered))
+print('# Mass traces filtered:', len(mass_traces_final))
 print('# Features:', feature_map_FFM.size())
 
 feature_map_FFM.setUniqueIds()
@@ -63,19 +59,16 @@ fh = FeatureXMLFile()
 print("Found", feature_map_FFM.size(), "features")
 fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map_FFM)
 
-# output all traces in the feature map
-# for p in feature_map_FFM:
-#     print(p.getRT(), p.getIntensity(), p.getMZ())
-
 # Run metabolite adduct decharging detection
 # With SIRIUS you are only able to use singly charged adducts
 mfd = MetaboliteFeatureDeconvolution()
 mdf_par = mfd.getDefaults()
 # set additional parameter values
-potential_adducts = [b"H:+:0.6",b"Na:+:0.2",b"NH4:+:0.1", b"K:+:0.1"]
-mdf_par.setValue("potential_adducts", potential_adducts)
+mdf_par.setValue("potential_adducts",  [b"H:+:0.6",b"Na:+:0.2",b"NH4:+:0.1", b"K:+:0.1"])
 mdf_par.setValue("charge_min", 1, "Minimal possible charge")
-mdf_par.setValue("charge_max", 2, "Maximal possible charge")
+mdf_par.setValue("charge_max", 1, "Maximal possible charge")
+mdf_par.setValue("charge_span_max", 1)
+mdf_par.setValue("max_neutrals", 1)
 print(mdf_par.getValue("potential_adducts")) # test if adducts have been set correctly
 mfd.setParameters(mdf_par)
 
@@ -86,42 +79,35 @@ mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 fxml = FeatureXMLFile()
 fxml.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
-
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
-#sirius_algo_par = SiriusAdapterAlgorithm().getDefaults()
-#sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) # need at least 3 mass traces (for testing)
-#sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
-#sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
-#sirius_algo.setParameters(sirius_algo_par)
+sirius_algo_par = sirius_algo.getDefaults()
+sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) # need at least 3 mass traces (for testing)
+sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
+sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
+sirius_algo_par.setValue("preprocessing:feature_only", "true")
+sirius_algo_par.setValue("sirius:profile", "qtof")
+sirius_algo_par.setValue("sirius:db", "all")
+sirius_algo_par.setValue("project:processors", 2)
+sirius_algo.setParameters(sirius_algo_par)
 
-
-# TODO: Add preprocessing here! To use the featureMapping! 
-#    run masstrace filter and feature mapping
-#    vector<FeatureMap> v_fp; // copy FeatureMap via push_back
-#   KDTreeFeatureMaps fp_map_kd; // reference to *basefeature in vector<FeatureMap>
-#  FeatureMapping::FeatureToMs2Indices feature_mapping; // reference to *basefeature in vector<FeatureMap>
-# https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L193
-featureinfo= "./wf_testing/devoncoluted.featureXML"
-spectra= exp
-v_fp= []
-fp_map_kd= KDTreeFeatureMaps()
+featureinfo = "./wf_testing/devoncoluted.featureXML"
+fm_info = FeatureMapping_FeatureMappingInfo()
 feature_mapping = FeatureMapping_FeatureToMs2Indices() 
 sirius_algo.preprocessingSirius(featureinfo,
-                                spectra,
-                                v_fp,
-                                fp_map_kd,
-                                sirius_algo,
+                                exp,
+                                fm_info,
                                 feature_mapping)
 
 print("preprocessed")
-# TODO: Check feature and/or spectra number
+# Check feature and/or spectra number
 # https://github.com/OpenMS/OpenMS/blob/develop/src/utils/SiriusAdapter.cpp#L201
-sirius_algo.checkFeatureSpectraNumber(featureinfo,
+sirius_algo.logFeatureSpectraNumber(featureinfo, 
                                     feature_mapping,
-                                    spectra,
-                                    sirius_algo)
+                                    exp)
+
 print("checked")
+
 # construct sirius ms file object
 msfile = SiriusMSFile()
 # create temporary filesystem objects
@@ -130,21 +116,19 @@ sirius_tmp = SiriusTemporaryFileSystemObjects(debug_level)
 siriusstring= String(sirius_tmp.getTmpMsFile())
 
 # fill variables, which are used in the function
-# TODO: need to construct the feature mapping 
-#feature_mapping = FeatureMapping_FeatureToMs2Indices() 
-feature_only = True #SiriusAdapterAlgorithm.getFeatureOnly()==True
-#this is a parameter, which is called "feature_only" 
-#It is a boolean value (true/false) and if it is true you are using the  the feature information 
-#from in_featureinfo to reduce the search space to MS2 associated with a feature.
-#this is recommended when working with featureXML input, if you do NOT use it 
-#sirius will use every individual MS2 spectrum for estimation (and it will take ages)
-#bool feature_only = (sirius_algo.getFeatureOnly() == "true") ? true : false;
-isotope_pattern_iterations = 3
-no_mt_info = False #SiriusAdapterAlgorithm.getNoMasstraceInfoIsotopePattern() == False
-compound_info = [] #SiriusMSFile_CompoundInfo()
+# this is a parameter, which is called "feature_only"
+# It is a boolean value (true/false) and if it is true you are using the  the feature information
+# from in_featureinfo to reduce the search space to MS2 associated with a feature.
+# this is recommended when working with featureXML input, if you do NOT use it
+# sirius will use every individual MS2 spectrum for estimation (and it will take ages)
 
-msfile.store(spectra, 
-             siriusstring, # has to be converted to an "OpenMS::String"
+feature_only = sirius_algo.isFeatureOnly()
+isotope_pattern_iterations = sirius_algo.getIsotopePatternIterations()
+no_mt_info = sirius_algo.isNoMasstraceInfoIsotopePattern()
+compound_info = []
+
+msfile.store(exp, 
+             String(sirius_tmp.getTmpMsFile()),
              feature_mapping, 
              feature_only,
              isotope_pattern_iterations, 
@@ -152,28 +136,26 @@ msfile.store(spectra,
              compound_info)
 
 print("stored")
+
 #next step:call siriusQprocess
-out_csi= CsiFingerIdMzTabWriter()
-out_csifingerid= String(out_csi)
-executable= "Users/eeko/Applications/sirius"
-subdirs= sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
-                                String(sirius_tmp.getTmpOutDir()),
-                                executable,
-                                out_csifingerid,
-                                sirius_algo)
+out_csifingerid = "" # empty string, since no file was specified - no CSIFingerId Output will be generated
+executable= "/Users/alka/Documents/work/software/use_update_THIRDPARTY/THIRDPARTY/MacOS/64bit/Sirius/sirius"
+subdirs = sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
+                                         String(sirius_tmp.getTmpOutDir()),
+                                         String(executable),
+                                         String(out_csifingerid),
+                                         False) # debug option not yet implemented
 print("SIRIUSQprocess")
 #SiriusMZtabwriter for storage
-candidates = sirius_algo.getCandidates()
-sirius_result= MzTab()
-siriusfile= MzTabFile()
-
-input = "data Thermo Orbitrap ID-X/FileFiltered Std/ThermocentroidpentamycinFileFilter.mzML"
+candidates = sirius_algo.getNumberOfSiriusCandidates()
+sirius_result = MzTab()
+siriusfile = MzTabFile()
 SiriusMzTabWriter.read(subdirs,
-                        input,
+                        input_mzML,
                         candidates,
                         sirius_result)
 print("storing..")
-siriusfile.store("./wf_testing/out_sirius", sirius_result)
+siriusfile.store("./wf_testing/out_sirius_test.mzTab", sirius_result)
 print("stored")
 
 #CSI:FingerID
