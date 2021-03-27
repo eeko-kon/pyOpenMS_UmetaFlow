@@ -3,7 +3,7 @@
 #import pyopenms 
 from pyopenms import *
 
-input_mzML = "Standards/ThermoCentroidGermicidinAstandard_FileFilter.mzML"
+input_mzML = "data Thermo Orbitrap ID-X/FileFiltered Std/GermBzlibFileFiltered.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -48,11 +48,11 @@ ffm = FeatureFindingMetabo()
 ffm_par = ffm.getDefaults() 
 # set additional parameter values
 ffm_par.setValue("isotope_filtering_model", "none")
+
 ffm.setParameters(ffm_par)
 ffm.run(mass_traces_final, feature_map_FFM, feat_chrom)
 
 print('# Mass traces filtered:', len(mass_traces_final))
-print('# Features:', feature_map_FFM.size())
 
 feature_map_FFM.setUniqueIds()
 fh = FeatureXMLFile()
@@ -64,7 +64,7 @@ fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map_FFM)
 mfd = MetaboliteFeatureDeconvolution()
 mdf_par = mfd.getDefaults()
 # set additional parameter values
-mdf_par.setValue("potential_adducts",  [b"H:+:0.6",b"Na:+:0.2",b"NH4:+:0.1", b"K:+:0.1"])
+mdf_par.setValue("potential_adducts",  [b"H:+:0.6",b"Na:+:0.1",b"NH4:+:0.1", b"K:+:0.1", b"H2O:-:0.1"])
 mdf_par.setValue("charge_min", 1, "Minimal possible charge")
 mdf_par.setValue("charge_max", 1, "Maximal possible charge")
 mdf_par.setValue("charge_span_max", 1)
@@ -81,13 +81,18 @@ fxml.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
+
 sirius_algo_par = sirius_algo.getDefaults()
-sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) # need at least 3 mass traces (for testing)
+
+sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 1) # cannot detect germicidins with more than 1 mass traces (isotopes)
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
 sirius_algo_par.setValue("preprocessing:feature_only", "true")
-sirius_algo_par.setValue("sirius:profile", "qtof")
+sirius_algo_par.setValue("sirius:profile", "orbitrap")
 sirius_algo_par.setValue("sirius:db", "all")
+sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+")
+sirius_algo_par.setValue("sirius:candidates", 2)
+sirius_algo_par.setValue("sirius:elements_enforced", "CHNOP[5]Cl[1-2]B[0]F[0]") #this doesn't work
 sirius_algo_par.setValue("project:processors", 2)
 sirius_algo.setParameters(sirius_algo_par)
 
@@ -139,7 +144,7 @@ print("stored")
 
 #next step:call siriusQprocess
 out_csifingerid = "" # empty string, since no file was specified - no CSIFingerId Output will be generated
-executable= "/Users/alka/Documents/work/software/use_update_THIRDPARTY/THIRDPARTY/MacOS/64bit/Sirius/sirius"
+executable= "/Users/eeko/Desktop/software/THIRDPARTY/MacOS/64bit/Sirius/sirius"
 subdirs = sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                          String(sirius_tmp.getTmpOutDir()),
                                          String(executable),

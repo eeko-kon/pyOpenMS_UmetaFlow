@@ -4,3 +4,4 @@ Standards/
 *.mzML
 *.bmp
 *.csv
+*.whl
