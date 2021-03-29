@@ -3,7 +3,7 @@
 #import pyopenms 
 from pyopenms import *
 
-input_mzML = "data Thermo Orbitrap ID-X/FileFiltered Std/GermBzlibFileFiltered.mzML"
+input_mzML = "data Thermo Orbitrap ID-X/MS1MS2profile data/MS1MS2profile/FileFilternozlib/20201204_DR_UMETAB169_EEK_POS_GermicidinBstandard_1FileFilter.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -90,9 +90,9 @@ sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
 sirius_algo_par.setValue("preprocessing:feature_only", "true")
 sirius_algo_par.setValue("sirius:profile", "orbitrap")
 sirius_algo_par.setValue("sirius:db", "all")
-sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+")
-sirius_algo_par.setValue("sirius:candidates", 2)
-sirius_algo_par.setValue("sirius:elements_enforced", "CHNOP[5]Cl[1-2]B[0]F[0]") #this doesn't work
+sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+, [M-H2O+H]+, [M+Na]+, [M+NH4]+")
+sirius_algo_par.setValue("sirius:candidates", 5)
+sirius_algo_par.setValue("sirius:elements_enforced", "C[1-200]H[1-200]N[50]O[100]P[5]Cl[2]") #this doesn't work
 sirius_algo_par.setValue("project:processors", 2)
 sirius_algo.setParameters(sirius_algo_par)
 
@@ -143,7 +143,7 @@ msfile.store(exp,
 print("stored")
 
 #next step:call siriusQprocess
-out_csifingerid = "" # empty string, since no file was specified - no CSIFingerId Output will be generated
+out_csifingerid = "./wf_testing/out_csifingerid" # empty string, since no file was specified - no CSIFingerId Output will be generated
 executable= "/Users/eeko/Desktop/software/THIRDPARTY/MacOS/64bit/Sirius/sirius"
 subdirs = sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                          String(sirius_tmp.getTmpOutDir()),
