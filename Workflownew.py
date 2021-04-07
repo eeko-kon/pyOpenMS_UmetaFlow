@@ -1,9 +1,14 @@
+"""
+#convert files from Thermo
+msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrumentError
+./FileFilter -in "path" -out "path" [0:]
+"""
 #import numpy as np 
 #import pandas as pd
 #import pyopenms 
 from pyopenms import *
 
-input_mzML = "data Thermo Orbitrap ID-X/MS1MS2profile data/MS1MS2profile/FileFilternozlib/20201204_DR_UMETAB169_EEK_POS_GermicidinBstandard_1FileFilter.mzML"
+input_mzML = "GUIMS1centroid/LeupeptinFiltered.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -21,7 +26,7 @@ mtd = MassTraceDetection()
 mtd_par = mtd.getDefaults()
 # set addition parameters values
 mtd_par.setValue("mass_error_ppm", 10.0) # example set ppm error
-mtd_par.setValue("noise_threshold_int", 10.0)
+mtd_par.setValue("noise_threshold_int", 1.0e04)
 mtd.setParameters(mtd_par)
 print(mtd_par.getValue("mass_error_ppm")) # example check a specific value
 mtd.run(exp, mass_traces, 0)  # 0 is default and does not restrict found mass traces
@@ -48,7 +53,8 @@ ffm = FeatureFindingMetabo()
 ffm_par = ffm.getDefaults() 
 # set additional parameter values
 ffm_par.setValue("isotope_filtering_model", "none")
-
+ffm_par.setValue("remove_single_traces", "true")
+ffm_par.setValue("mz_scoring_by_elements", "true")
 ffm.setParameters(ffm_par)
 ffm.run(mass_traces_final, feature_map_FFM, feat_chrom)
 
@@ -84,15 +90,16 @@ sirius_algo = SiriusAdapterAlgorithm()
 
 sirius_algo_par = sirius_algo.getDefaults()
 
-sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 1) # cannot detect germicidins with more than 1 mass traces (isotopes)
+sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) 
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
+sirius_algo_par.setValue("preprocessing:precursor_rt_tolerance", 6.0)
 sirius_algo_par.setValue("preprocessing:feature_only", "true")
 sirius_algo_par.setValue("sirius:profile", "orbitrap")
 sirius_algo_par.setValue("sirius:db", "all")
-sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+, [M-H2O+H]+, [M+Na]+, [M+NH4]+")
+#sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+, [M-H2O+H]+, [M+Na]+, [M+NH4]+")
 sirius_algo_par.setValue("sirius:candidates", 5)
-sirius_algo_par.setValue("sirius:elements_enforced", "C[1-200]H[1-200]N[50]O[100]P[5]Cl[2]") #this doesn't work
+sirius_algo_par.setValue("sirius:elements_enforced", "CHNOP") 
 sirius_algo_par.setValue("project:processors", 2)
 sirius_algo.setParameters(sirius_algo_par)
 
@@ -139,11 +146,12 @@ msfile.store(exp,
              isotope_pattern_iterations, 
              no_mt_info, 
              compound_info)
-
+print(String(sirius_tmp.getTmpMsFile()))
 print("stored")
 
+
 #next step:call siriusQprocess
-out_csifingerid = "./wf_testing/out_csifingerid" # empty string, since no file was specified - no CSIFingerId Output will be generated
+out_csifingerid = "./wf_testing/csifingerID.mzTab" # empty string, since no file was specified - no CSIFingerId Output will be generated
 executable= "/Users/eeko/Desktop/software/THIRDPARTY/MacOS/64bit/Sirius/sirius"
 subdirs = sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                          String(sirius_tmp.getTmpOutDir()),
@@ -164,3 +172,12 @@ siriusfile.store("./wf_testing/out_sirius_test.mzTab", sirius_result)
 print("stored")
 
 #CSI:FingerID
+top_hits= 5
+csi_result=MzTab()
+csi_file=MzTabFile()
+CsiFingerIdMzTabWriter.read(subdirs,
+                    input_mzML,
+                    top_hits,
+                    csi_result)
+
+csi_file.store("./wf_testing/csifingerID.mzTab", csi_result)
