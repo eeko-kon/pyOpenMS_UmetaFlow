@@ -8,7 +8,7 @@ msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrum
 #import pyopenms 
 from pyopenms import *
 
-input_mzML = "data Thermo Orbitrap ID-X/FileFiltered Std/ScollinusISP2.mzML"
+input_mzML = "data Thermo Orbitrap ID-X/FileFiltered Std/Scollinus.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -90,13 +90,13 @@ sirius_algo = SiriusAdapterAlgorithm()
 
 sirius_algo_par = sirius_algo.getDefaults()
 
-sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) 
+sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 2) 
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
-sirius_algo_par.setValue("preprocessing:precursor_rt_tolerance", 5.0)
+#sirius_algo_par.setValue("preprocessing:precursor_rt_tolerance", 5.0)
 sirius_algo_par.setValue("preprocessing:feature_only", "true")
 sirius_algo_par.setValue("sirius:profile", "orbitrap")
-sirius_algo_par.setValue("sirius:db", "all")
+#sirius_algo_par.setValue("sirius:db", "all")
 #sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+, [M-H2O+H]+, [M+Na]+, [M+NH4]+")
 sirius_algo_par.setValue("sirius:candidates", 5)
 sirius_algo_par.setValue("sirius:elements_enforced", "CHNOP") 
