@@ -8,7 +8,7 @@ msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrum
 #import pyopenms 
 from pyopenms import *
 
-input_mzML = "GUIMS1centroid/LeupeptinFiltered.mzML"
+input_mzML = "data Thermo Orbitrap ID-X/FileFiltered Std/ScollinusISP2.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -93,7 +93,7 @@ sirius_algo_par = sirius_algo.getDefaults()
 sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) 
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
-sirius_algo_par.setValue("preprocessing:precursor_rt_tolerance", 6.0)
+sirius_algo_par.setValue("preprocessing:precursor_rt_tolerance", 5.0)
 sirius_algo_par.setValue("preprocessing:feature_only", "true")
 sirius_algo_par.setValue("sirius:profile", "orbitrap")
 sirius_algo_par.setValue("sirius:db", "all")
@@ -170,7 +170,7 @@ SiriusMzTabWriter.read(subdirs,
 print("storing..")
 siriusfile.store("./wf_testing/out_sirius_test.mzTab", sirius_result)
 print("stored")
-
+"""
 #CSI:FingerID
 top_hits= 5
 csi_result=MzTab()
@@ -181,3 +181,4 @@ CsiFingerIdMzTabWriter.read(subdirs,
                     csi_result)
 
 csi_file.store("./wf_testing/csifingerID.mzTab", csi_result)
+"""
