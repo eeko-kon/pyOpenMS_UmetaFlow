@@ -26,7 +26,7 @@ mtd = MassTraceDetection()
 mtd_par = mtd.getDefaults()
 # set addition parameters values
 mtd_par.setValue("mass_error_ppm", 10.0) # example set ppm error
-mtd_par.setValue("noise_threshold_int", 1.0e04)
+mtd_par.setValue("noise_threshold_int", 1.0e05)
 mtd.setParameters(mtd_par)
 print(mtd_par.getValue("mass_error_ppm")) # example check a specific value
 mtd.run(exp, mass_traces, 0)  # 0 is default and does not restrict found mass traces
@@ -53,8 +53,8 @@ ffm = FeatureFindingMetabo()
 ffm_par = ffm.getDefaults() 
 # set additional parameter values
 ffm_par.setValue("isotope_filtering_model", "none")
-ffm_par.setValue("remove_single_traces", "true")
-ffm_par.setValue("mz_scoring_by_elements", "true")
+ffm_par.setValue("remove_single_traces", "false")
+ffm_par.setValue("mz_scoring_by_elements", "false")
 ffm.setParameters(ffm_par)
 ffm.run(mass_traces_final, feature_map_FFM, feat_chrom)
 
@@ -170,7 +170,7 @@ SiriusMzTabWriter.read(subdirs,
 print("storing..")
 siriusfile.store("./wf_testing/out_sirius_test.mzTab", sirius_result)
 print("stored")
-"""
+
 #CSI:FingerID
 top_hits= 5
 csi_result=MzTab()
@@ -181,4 +181,3 @@ CsiFingerIdMzTabWriter.read(subdirs,
                     csi_result)
 
 csi_file.store("./wf_testing/csifingerID.mzTab", csi_result)
-"""

@@ -1,4 +1,4 @@
-ssh shared
+ssh eeko@10.75.1.39
 source env_py4e/bin/activate
 cd py4e/
 python3 Workflow1.py ../20200723_NBC_UMETAB137_WGS14_standard_POS_005.mzML ^C
