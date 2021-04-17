@@ -8,7 +8,7 @@ msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrum
 #import pyopenms 
 from pyopenms import *
 
-input_mzML = "data Thermo Orbitrap ID-X/FileFiltered Std/Scollinus.mzML"
+input_mzML = "data Thermo Orbitrap ID-X/FileFiltered Std/20210129_DR_UMETAB179_ISP2S_collinus3.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -26,7 +26,7 @@ mtd = MassTraceDetection()
 mtd_par = mtd.getDefaults()
 # set addition parameters values
 mtd_par.setValue("mass_error_ppm", 10.0) # example set ppm error
-mtd_par.setValue("noise_threshold_int", 1.0e05)
+mtd_par.setValue("noise_threshold_int", 1.0e04)
 mtd.setParameters(mtd_par)
 print(mtd_par.getValue("mass_error_ppm")) # example check a specific value
 mtd.run(exp, mass_traces, 0)  # 0 is default and does not restrict found mass traces
@@ -70,7 +70,7 @@ fh.store('./wf_testing/FeatureFindingMetabo.featureXML', feature_map_FFM)
 mfd = MetaboliteFeatureDeconvolution()
 mdf_par = mfd.getDefaults()
 # set additional parameter values
-mdf_par.setValue("potential_adducts",  [b"H:+:0.6",b"Na:+:0.1",b"NH4:+:0.1", b"K:+:0.1", b"H2O:-:0.1"])
+mdf_par.setValue("potential_adducts",  [b"H:+:0.6",b"Na:+:0.2",b"NH4:+:0.1", b"H2O:-:0.1"])
 mdf_par.setValue("charge_min", 1, "Minimal possible charge")
 mdf_par.setValue("charge_max", 1, "Maximal possible charge")
 mdf_par.setValue("charge_span_max", 1)
