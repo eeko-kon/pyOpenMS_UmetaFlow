@@ -1,14 +1,14 @@
 """
 #convert files from Thermo
 msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrumentError
-./FileFilter -in "path" -out "path" [0:]
+./FileFilter -in "path" -out "path" -int "0:"
 """
 #import numpy as np 
 #import pandas as pd
 #import pyopenms 
 from pyopenms import *
 
-input_mzML = "data Thermo Orbitrap ID-X/FileFiltered Std/20210129_DR_UMETAB179_ISP2S_collinus3.mzML"
+input_mzML = "data Thermo Orbitrap ID-X/FileFiltered Std/Agnes_POS_MDNA_WGS_103_Filtered.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -85,6 +85,11 @@ mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 fxml = FeatureXMLFile()
 fxml.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
+# Precursor corrector
+features= feature_map_DEC
+PrecursorCorrection.correctToNearestFeature(features, exp, 0.0, 0.0, True, False, False, False, 3, 0)
+
+"""
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
 
@@ -97,9 +102,9 @@ sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
 sirius_algo_par.setValue("preprocessing:feature_only", "true")
 sirius_algo_par.setValue("sirius:profile", "orbitrap")
 #sirius_algo_par.setValue("sirius:db", "all")
-#sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+, [M-H2O+H]+, [M+Na]+, [M+NH4]+")
-sirius_algo_par.setValue("sirius:candidates", 5)
-sirius_algo_par.setValue("sirius:elements_enforced", "CHNOP") 
+sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+, [M-H2O+H]+, [M+Na]+, [M+NH4]+")
+sirius_algo_par.setValue("sirius:candidates", 10)
+sirius_algo_par.setValue("sirius:elements_enforced", "CHNOP[1]") 
 sirius_algo_par.setValue("project:processors", 2)
 sirius_algo.setParameters(sirius_algo_par)
 
@@ -181,3 +186,4 @@ CsiFingerIdMzTabWriter.read(subdirs,
                     csi_result)
 
 csi_file.store("./wf_testing/csifingerID.mzTab", csi_result)
+"""
