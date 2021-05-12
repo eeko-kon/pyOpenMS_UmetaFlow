@@ -86,7 +86,7 @@ fmdec= FeatureXMLFile()
 fmdec.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
 
 # Precursor corrector
-features= feature_map_DEC
+features= feature_map_FFM
 PrecursorCorrection.correctToNearestFeature(features, exp, 0.0, 0.0, True, False, False, False, 3, 0)
 
 fxml = FeatureXMLFile()
@@ -188,4 +188,3 @@ CsiFingerIdMzTabWriter.read(subdirs,
                     csi_result)
 
 csi_file.store("./wf_testing/csifingerID.mzTab", csi_result)
-"""
