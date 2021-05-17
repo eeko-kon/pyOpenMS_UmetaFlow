@@ -83,14 +83,13 @@ cons_map0 = ConsensusMap()
 cons_map1 = ConsensusMap()
 mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 fmdec= FeatureXMLFile()
-fmdec.store("./wf_testing/devoncoluted.featureXML", feature_map_DEC)
+fmdec.store("./wf_testing/deconvoluted.featureXML", feature_map_DEC)
 
 # Precursor corrector
-features= feature_map_FFM
-PrecursorCorrection.correctToNearestFeature(features, exp, 0.0, 0.0, True, False, False, False, 3, 0)
-
-fxml = FeatureXMLFile()
-fxml.store("./wf_testing/precursorcorrection.featureXML", feature_map_DEC)
+delta_mzs= []
+mzs = []
+rts= []
+PrecursorCorrection.correctToHighestIntensityMS1Peak(exp, 100.0, True, delta_mzs, mzs, rts)
 
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
@@ -106,11 +105,11 @@ sirius_algo_par.setValue("sirius:profile", "orbitrap")
 sirius_algo_par.setValue("sirius:db", "all")
 sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+, [M-H2O+H]+, [M+Na]+, [M+NH4]+")
 sirius_algo_par.setValue("sirius:candidates", 10)
-sirius_algo_par.setValue("sirius:elements_enforced", "CHN[30]OP") 
+sirius_algo_par.setValue("sirius:elements_enforced", "CHNOP") 
 sirius_algo_par.setValue("project:processors", 2)
 sirius_algo.setParameters(sirius_algo_par)
 
-featureinfo = "./wf_testing/precursorcorrection.featureXML"
+featureinfo = "./wf_testing/deconvoluted.featureXML"
 fm_info = FeatureMapping_FeatureMappingInfo()
 feature_mapping = FeatureMapping_FeatureToMs2Indices() 
 sirius_algo.preprocessingSirius(featureinfo,
