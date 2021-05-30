@@ -120,10 +120,11 @@ def SIRIUS(filename):
                  isotope_pattern_iterations, 
                  no_mt_info, 
                  compound_info)    
-    out_csifingerid = "./pyOpenMS_results/csifingerID.mzTab" # empty string " " : when no file is specified, no CSIFingerId Output will be generated
+    out_csifingerid = "./pyOpenMS_results/csifingerID.mzTab" 
+    executable= "/Users/eeko/Desktop/software/Contents/MacOS/sirius"# empty string " " : when no file is specified, no CSIFingerId Output will be generated
     subdirs = sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                              String(sirius_tmp.getTmpOutDir()),
-                                             String(SIRIUS_EXECUTABLE_PATH),
+                                             String(executable),
                                              String(out_csifingerid),
                                              False)
     
