@@ -98,9 +98,9 @@ _static_PrecursorCorrection_correctToNearestFeature(...)
     bool all_matching_features, 
     int max_trace, int debug_level)
 """
-out_mzml= "./mzML_files/wf_testing/PrecursorCorrected.mzML"
+in_feature=[]
 features= FeatureMap()
-FeatureXMLFile().load("./mzML_files/wf_testing/deconvoluted.featureXML", features)
+FeatureXMLFile().load(in_feature, features)
 PrecursorCorrection.correctToNearestFeature(features, exp, 0.0, 100.0, True, False, False, False, 3, 0)
 MzMLFile().store(out_mzml, exp)
 """
