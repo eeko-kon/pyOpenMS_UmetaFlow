@@ -1,0 +1,2 @@
+inchikey2D	inchi	molecularFormula	rank	score	name	smiles	xlogp	PubMedIds	links	tanimotoSimilarity	dbflags
+WPJCGITZOQYVOX	InChI=1S/C2H8O2S/c1-5(2,3)4/h3-4H,1-2H3	C2H8O2S	1	-88.36746313207655	dihydroxy(dimethyl)-$l^{4}-sulfane	CS(C)(O)O	-0.100000001		PubChem:(23381950)	0.26007058093053215	2

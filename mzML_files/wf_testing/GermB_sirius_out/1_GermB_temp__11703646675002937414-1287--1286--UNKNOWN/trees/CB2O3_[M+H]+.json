@@ -1,0 +1,74 @@
+{
+  "molecularFormula" : "CB2O3",
+  "root" : "CB2O3",
+  "annotations" : {
+    "recalibration" : {
+      "merged" : "1.0x"
+    },
+    "statistics" : {
+      "explainedIntensity" : 0.0,
+      "explainedIntensityOfExplainablePeaks" : 0.0,
+      "ratioOfExplainedPeaks" : 0.0
+    },
+    "nodeBoost" : 3.0,
+    "numberOfUnconsideredCandidates" : 1,
+    "lowestConsideredCandidateScore" : -1.8720215749753062,
+    "precursorIonType" : "[M + H]+"
+  },
+  "fragments" : [ {
+    "id" : 0,
+    "molecularFormula" : "CB2O3",
+    "massDeviation" : "-7.247884340972948 ppm (-5.872040715360072E-4 m/z)",
+    "recalibratedMassDeviation" : "-7.247884340972948 ppm (-5.872040715360072E-4 m/z)",
+    "score" : -1.8720215749753062,
+    "scores" : {
+      "Chemical Prior" : 0.0,
+      "MS-Isotopes" : 0.0,
+      "Mass Deviation" : -0.2625836625412059,
+      "CarbohydrogenCompound" : 0.0,
+      "motif-search" : 0.0,
+      "MS2-Isotopes" : 0.0,
+      "PhosphorScorer" : 0.0,
+      "BeautificationScorer" : -0.0,
+      "IntrinsicallyChargedScorer" : 0.0,
+      "StrangeElementRootScorer" : -1.6094379124341003
+    },
+    "molecularFormula" : "CB2O3",
+    "relativeIntensity" : 1.0,
+    "ion" : "[M + H]+",
+    "mz" : 81.017307108019,
+    "recalibratedMass" : 81.017307108019,
+    "peaks" : [ {
+      "intensity" : 3.1313898E7,
+      "ce" : "none",
+      "spectrum" : 5,
+      "mz" : 81.017521643454
+    }, {
+      "intensity" : 3.0990004E7,
+      "ce" : "none",
+      "spectrum" : 3,
+      "mz" : 81.017525390709
+    }, {
+      "intensity" : 3.480108E7,
+      "ce" : "none",
+      "spectrum" : 2,
+      "mz" : 81.017547535677
+    }, {
+      "intensity" : 3.154463E7,
+      "ce" : "none",
+      "spectrum" : 0,
+      "mz" : 81.017603583766
+    }, {
+      "intensity" : 3.2915858E7,
+      "ce" : "none",
+      "spectrum" : 4,
+      "mz" : 81.01761768614
+    }, {
+      "intensity" : 3.094134E7,
+      "ce" : "none",
+      "spectrum" : 1,
+      "mz" : 81.017651690384
+    } ]
+  } ],
+  "losses" : [ ]
+}

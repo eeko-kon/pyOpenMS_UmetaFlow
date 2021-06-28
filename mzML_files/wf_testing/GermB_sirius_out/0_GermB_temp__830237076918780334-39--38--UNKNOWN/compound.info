@@ -1,0 +1,8 @@
+index	0
+name	GermB_temp__830237076918780334-39--38--UNKNOWN
+ionMass	79.021237711127
+ionType	[M + ?]+
+detectedAdducts	MS1_PREPROCESSOR:{}
+rt	53.18508721602:NaN,NaN
+confidenceScore	-Infinity
+rankingScoreType	sirius.scores.SiriusScore

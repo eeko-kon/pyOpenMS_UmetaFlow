@@ -1,0 +1,2 @@
+rank	formulaRank	CSI:FingerIDScore	molecularFormula	adduct	InChIkey2D	InChI	name	smiles	xlogp	pubchemids	links	dbflags
+1	1	-88.36746313207655	C2H8O2S	[M - H2O + H]+	WPJCGITZOQYVOX	InChI=1S/C2H8O2S/c1-5(2,3)4/h3-4H,1-2H3	dihydroxy(dimethyl)-$l^{4}-sulfane	CS(C)(O)O	-0.100000001	23381950	PubChem:(23381950)	2
