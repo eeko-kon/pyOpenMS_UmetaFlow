@@ -7,7 +7,7 @@ msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrum
 #import pandas as pd
 #import pyopenms 
 from pyopenms import *
-input_mzML = "mzML_files/Agnes_POS_MDNA_WGS_103_Filtered.mzML"
+input_mzML = "mzML_files/Epemicins_flt.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -85,11 +85,24 @@ fmdec= FeatureXMLFile()
 fmdec.store("./mzML_files/wf_testing/deconvoluted.featureXML", feature_map_DEC)
 
 # Precursor corrector
+"""
+_static_PrecursorCorrection_correctToNearestFeature(...)
+    Cython signature: libcpp_set[size_t] 
+    correctToNearestFeature(FeatureMap & features, 
+    MSExperiment & exp, 
+    double rt_tolerance_s, 
+    double mz_tolerance, 
+    bool ppm, 
+    bool believe_charge, 
+    bool keep_original, 
+    bool all_matching_features, 
+    int max_trace, int debug_level)
+"""
 delta_mzs= []
 mzs = []
 rts= []
-PrecursorCorrection.correctToHighestIntensityMS1Peak(exp, 100.0, True, delta_mzs, mzs, rts)
-
+PrecursorCorrection.correctToNearestFeature(feature_map_FFM, exp, 0.0, 100.0, True, False, False, False, 3, 0)
+"""
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
 
@@ -186,3 +199,4 @@ CsiFingerIdMzTabWriter.read(subdirs,
                     csi_result)
 
 csi_file.store("./mzML_files/wf_testing/csifingerID.mzTab", csi_result)
+"""
