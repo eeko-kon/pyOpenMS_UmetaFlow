@@ -5,3 +5,5 @@ Standards/
 *.bmp
 *.csv
 *.whl
+*.mzTab
+*.ms

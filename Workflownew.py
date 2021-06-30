@@ -7,7 +7,7 @@ msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrum
 #import pandas as pd
 #import pyopenms 
 from pyopenms import *
-input_mzML = "./mzML_files/FileFiltered Std/20201204_DR_UMETAB169_EEK_POS_GermicidinBstandard_1FileFilter.mzML"
+input_mzML = "./mzML_files/Epemicins_flt.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -103,7 +103,7 @@ features= FeatureMap()
 FeatureXMLFile().load("./mzML_files/wf_testing/deconvolutedGermB.featureXML", features)
 PrecursorCorrection.correctToNearestFeature(features, exp, 0.0, 100.0, True, False, False, False, 3, 0)
 MzMLFile().store(out_mzml, exp)
-
+"""
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
 
@@ -200,3 +200,4 @@ CsiFingerIdMzTabWriter.read(subdirs,
                     csi_result)
 
 csi_file.store("./mzML_files/wf_testing/csifingerIDGermB.mzTab", csi_result)
+"""
