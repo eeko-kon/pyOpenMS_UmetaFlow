@@ -7,7 +7,7 @@ msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrum
 #import pandas as pd
 #import pyopenms 
 from pyopenms import *
-input_mzML = "./mzML_files/Epemicins_flt.mzML"
+input_mzML = "./mzML_files/Agnes_POS_MDNA_WGS_103_Filtered.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -62,7 +62,7 @@ print('# Mass traces filtered:', len(mass_traces_final))
 feature_map_FFM.setUniqueIds()
 fh = FeatureXMLFile()
 print("Found", feature_map_FFM.size(), "features")
-fh.store('./mzML_files/wf_testing/FeatureFindingMetaboGermB.featureXML', feature_map_FFM)
+fh.store('./mzML_files/wf_testing/FeatureFindingMetaboAgnes.featureXML', feature_map_FFM)
 
 # Run metabolite adduct decharging detection
 # With SIRIUS you are only able to use singly charged adducts
@@ -82,7 +82,7 @@ cons_map0 = ConsensusMap()
 cons_map1 = ConsensusMap()
 mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 fmdec= FeatureXMLFile()
-fmdec.store("./mzML_files/wf_testing/deconvolutedGermB.featureXML", feature_map_DEC)
+fmdec.store("./mzML_files/wf_testing/deconvolutedAgnes.featureXML", feature_map_DEC)
 
 # Precursor corrector
 """
@@ -98,12 +98,12 @@ _static_PrecursorCorrection_correctToNearestFeature(...)
     bool all_matching_features, 
     int max_trace, int debug_level)
 """
-out_mzml= "./mzML_files/wf_testing/PrecursorCorrectedGermB.mzML"
+out_mzml= "./mzML_files/wf_testing/PrecursorCorrectedAgnes.mzML"
 features= FeatureMap()
-FeatureXMLFile().load("./mzML_files/wf_testing/deconvolutedGermB.featureXML", features)
+FeatureXMLFile().load("./mzML_files/wf_testing/deconvolutedAgnes.featureXML", features)
 PrecursorCorrection.correctToNearestFeature(features, exp, 0.0, 100.0, True, False, False, False, 3, 0)
 MzMLFile().store(out_mzml, exp)
-"""
+
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
 
@@ -122,7 +122,7 @@ sirius_algo_par.setValue("sirius:elements_enforced", "CHNOP")
 sirius_algo_par.setValue("project:processors", 2)
 sirius_algo.setParameters(sirius_algo_par)
 
-featureinfo = "./mzML_files/wf_testing/deconvolutedGermB.featureXML"
+featureinfo = "./mzML_files/wf_testing/deconvolutedAgnes.featureXML"
 fm_info = FeatureMapping_FeatureMappingInfo()
 feature_mapping = FeatureMapping_FeatureToMs2Indices() 
 sirius_algo.preprocessingSirius(featureinfo,
@@ -170,7 +170,7 @@ print("stored")
 
 
 #next step:call siriusQprocess
-out_csifingerid = "./mzML_files/wf_testing/csifingerIDGermB.mzTab" # empty string, since no file was specified - no CSIFingerId Output will be generated
+out_csifingerid = "./mzML_files/wf_testing/csifingerIDAgnes.mzTab" # empty string, since no file was specified - no CSIFingerId Output will be generated
 executable= "/Users/eeko/Desktop/software/Contents/MacOS/sirius"
 subdirs = sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                          String(sirius_tmp.getTmpOutDir()),
@@ -187,7 +187,7 @@ SiriusMzTabWriter.read(subdirs,
                         candidates,
                         sirius_result)
 print("storing..")
-siriusfile.store("./mzML_files/wf_testing/out_sirius_testGermB.mzTab", sirius_result)
+siriusfile.store("./mzML_files/wf_testing/out_sirius_testAgnes.mzTab", sirius_result)
 print("stored")
 
 #CSI:FingerID
@@ -199,5 +199,4 @@ CsiFingerIdMzTabWriter.read(subdirs,
                     top_hits,
                     csi_result)
 
-csi_file.store("./mzML_files/wf_testing/csifingerIDGermB.mzTab", csi_result)
-"""
+csi_file.store("./mzML_files/wf_testing/csifingerIDAgnes.mzTab", csi_result)
