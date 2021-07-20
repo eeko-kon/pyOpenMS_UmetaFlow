@@ -5,7 +5,6 @@ msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrum
 """
 #import numpy as np 
 #import pandas as pd
-#import pyopenms 
 from pyopenms import *
 input_mzML = "./mzML_files/Agnes_POS_MDNA_WGS_103_Filtered.mzML"
 
@@ -86,40 +85,29 @@ fmdec.store("./mzML_files/wf_testing/deconvolutedAgnes.featureXML", feature_map_
 
 # Precursor corrector
 """
-_static_PrecursorCorrection_correctToNearestFeature(...)
-    Cython signature: libcpp_set[size_t] 
-    correctToNearestFeature(FeatureMap & features, 
-    MSExperiment & exp, 
-    double rt_tolerance_s, 
-    double mz_tolerance, 
-    bool ppm, 
-    bool believe_charge, 
-    bool keep_original, 
-    bool all_matching_features, 
-    int max_trace, int debug_level)
-"""
 out_mzml= "./mzML_files/wf_testing/PrecursorCorrectedAgnes.mzML"
 features= FeatureMap()
 FeatureXMLFile().load("./mzML_files/wf_testing/deconvolutedAgnes.featureXML", features)
 PrecursorCorrection.correctToNearestFeature(features, exp, 0.0, 100.0, True, False, False, False, 3, 0)
 MzMLFile().store(out_mzml, exp)
-
+"""
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
 
 sirius_algo_par = sirius_algo.getDefaults()
 
 sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 2) 
-sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0)
+sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0) #default
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
-sirius_algo_par.setValue("preprocessing:precursor_rt_tolerance", 5.0)
+sirius_algo_par.setValue("preprocessing:precursor_rt_tolerance", 5.0) #default
 sirius_algo_par.setValue("preprocessing:feature_only", "true")
 sirius_algo_par.setValue("sirius:profile", "orbitrap")
-sirius_algo_par.setValue("sirius:db", "all")
+sirius_algo_par.setValue("sirius:db", "none")
 sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+, [M-H2O+H]+, [M+Na]+, [M+NH4]+")
 sirius_algo_par.setValue("sirius:candidates", 10)
-sirius_algo_par.setValue("sirius:elements_enforced", "CHNOP") 
+sirius_algo_par.setValue("sirius:elements_enforced", "CHNOS") 
 sirius_algo_par.setValue("project:processors", 2)
+sirius_algo_par.setValue("fingerid:db", "all")
 sirius_algo.setParameters(sirius_algo_par)
 
 featureinfo = "./mzML_files/wf_testing/deconvolutedAgnes.featureXML"
@@ -142,7 +130,7 @@ print("checked")
 # construct sirius ms file object
 msfile = SiriusMSFile()
 # create temporary filesystem objects
-debug_level = 10
+debug_level = 3
 sirius_tmp = SiriusTemporaryFileSystemObjects(debug_level)
 siriusstring= String(sirius_tmp.getTmpMsFile())
 
@@ -183,7 +171,7 @@ candidates = sirius_algo.getNumberOfSiriusCandidates()
 sirius_result = MzTab()
 siriusfile = MzTabFile()
 SiriusMzTabWriter.read(subdirs,
-                        out_mzml,
+                        input_mzML,
                         candidates,
                         sirius_result)
 print("storing..")
