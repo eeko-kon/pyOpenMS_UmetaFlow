@@ -84,13 +84,13 @@ fmdec= FeatureXMLFile()
 fmdec.store("./mzML_files/wf_testing/deconvolutedAgnes.featureXML", feature_map_DEC)
 
 # Precursor corrector
-"""
+
 out_mzml= "./mzML_files/wf_testing/PrecursorCorrectedAgnes.mzML"
 features= FeatureMap()
 FeatureXMLFile().load("./mzML_files/wf_testing/deconvolutedAgnes.featureXML", features)
 PrecursorCorrection.correctToNearestFeature(features, exp, 0.0, 100.0, True, False, False, False, 3, 0)
 MzMLFile().store(out_mzml, exp)
-"""
+
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
 
@@ -107,7 +107,7 @@ sirius_algo_par.setValue("sirius:ions_considered", "[M+H]+, [M-H2O+H]+, [M+Na]+,
 sirius_algo_par.setValue("sirius:candidates", 10)
 sirius_algo_par.setValue("sirius:elements_enforced", "CHNOS") 
 sirius_algo_par.setValue("project:processors", 2)
-sirius_algo_par.setValue("fingerid:db", "all")
+sirius_algo_par.setValue("fingerid:db", "BIO")
 sirius_algo.setParameters(sirius_algo_par)
 
 featureinfo = "./mzML_files/wf_testing/deconvolutedAgnes.featureXML"
@@ -171,7 +171,7 @@ candidates = sirius_algo.getNumberOfSiriusCandidates()
 sirius_result = MzTab()
 siriusfile = MzTabFile()
 SiriusMzTabWriter.read(subdirs,
-                        input_mzML,
+                        out_mzml,
                         candidates,
                         sirius_result)
 print("storing..")
@@ -183,7 +183,7 @@ top_hits= 5
 csi_result=MzTab()
 csi_file=MzTabFile()
 CsiFingerIdMzTabWriter.read(subdirs,
-                    input_mzML,
+                    out_mzml,
                     top_hits,
                     csi_result)
 
