@@ -97,7 +97,7 @@ sirius_algo = SiriusAdapterAlgorithm()
 sirius_algo_par = sirius_algo.getDefaults()
 
 sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 2) 
-sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0) #default
+sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 20.0) #default
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
 sirius_algo_par.setValue("preprocessing:precursor_rt_tolerance", 5.0) #default
 sirius_algo_par.setValue("preprocessing:feature_only", "true")
