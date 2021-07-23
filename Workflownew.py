@@ -6,7 +6,7 @@ msconvert *.raw --zlib --filter "peakPicking true [1 ,2]" --ignoreUnknownInstrum
 #import numpy as np 
 #import pandas as pd
 from pyopenms import *
-input_mzML = "./mzML_files/Agnes_POS_MDNA_WGS_103_Filtered.mzML"
+input_mzML = "./mzML_files/FileFiltered Std/converter issue/GUImsconvertPeakPickingFileflt.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -17,6 +17,11 @@ print(exp.getSourceFiles()[0].getNativeIDType())
 
 # sorty my m/z
 exp.sortSpectra(True)
+
+delta_mzs= []
+mzs = []
+rts= []
+PrecursorCorrection.correctToHighestIntensityMS1Peak(exp, 100.0, True, delta_mzs, mzs, rts)
 
 # Run mass trace detection
 mass_traces = []
@@ -85,19 +90,15 @@ fmdec.store("./mzML_files/wf_testing/deconvolutedAgnes.featureXML", feature_map_
 
 # Precursor corrector
 
-out_mzml= "./mzML_files/wf_testing/PrecursorCorrectedAgnes.mzML"
-features= FeatureMap()
-FeatureXMLFile().load("./mzML_files/wf_testing/deconvolutedAgnes.featureXML", features)
-PrecursorCorrection.correctToNearestFeature(features, exp, 0.0, 100.0, True, False, False, False, 3, 0)
-MzMLFile().store(out_mzml, exp)
+PrecursorCorrection.correctToNearestFeature(feature_map_DEC, exp, 0.0, 100.0, True, False, False, False, 3, 0)
 
 # Prepare sirius parameters
 sirius_algo = SiriusAdapterAlgorithm()
 
 sirius_algo_par = sirius_algo.getDefaults()
 
-sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 2) 
-sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 20.0) #default
+sirius_algo_par.setValue("preprocessing:filter_by_num_masstraces", 3) 
+sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance", 10.0) #default
 sirius_algo_par.setValue("preprocessing:precursor_mz_tolerance_unit", "ppm")
 sirius_algo_par.setValue("preprocessing:precursor_rt_tolerance", 5.0) #default
 sirius_algo_par.setValue("preprocessing:feature_only", "true")
@@ -171,7 +172,7 @@ candidates = sirius_algo.getNumberOfSiriusCandidates()
 sirius_result = MzTab()
 siriusfile = MzTabFile()
 SiriusMzTabWriter.read(subdirs,
-                        out_mzml,
+                        input_mzML,
                         candidates,
                         sirius_result)
 print("storing..")
@@ -183,7 +184,7 @@ top_hits= 5
 csi_result=MzTab()
 csi_file=MzTabFile()
 CsiFingerIdMzTabWriter.read(subdirs,
-                    out_mzml,
+                    input_mzML,
                     top_hits,
                     csi_result)
 
