@@ -7,3 +7,4 @@ Standards/
 *.whl
 *.mzTab
 *.ms
+/rawdata
