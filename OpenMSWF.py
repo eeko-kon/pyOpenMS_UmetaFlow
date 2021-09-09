@@ -1,13 +1,15 @@
 """
-#convert files from Thermo
+#convert files from ThermoRawFileParser 
+cd 
+mono ThermoRawFileParser.exe -d=/Users/eeko/Desktop/py4e/rawdata/mgf/ -f=0 -g 
+mono ThermoRawFileParser.exe -d=/Users/eeko/Desktop/py4e/rawdata/mzML/ 
 
-msconvert *.raw --filter "peakPicking true 1- " --filter "msLevel 1-" --ignoreUnknownInstrumentError
-
+this command will automatically convert the files to centroid mzML
 """
 #import numpy as np 
 #import pandas as pd
 from pyopenms import *
-input_mzML = "./rawdata/CLImzml/CollinusKirromycin.mzML"
+input_mzML = "./rawdata/mzML/CollinusKirromycin.mzML"
 
 exp = MSExperiment()
 print("Loading")
