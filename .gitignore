@@ -7,3 +7,8 @@
 *.mzTab
 *.ms
 /rawdata
+.devcontainer/*
+.vscode/*
+CHEMISTRY/*
+miscellaneous/*
+__pycache__
