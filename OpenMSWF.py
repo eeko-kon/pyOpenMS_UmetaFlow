@@ -9,7 +9,7 @@ this command will automatically convert the files to centroid mzML
 #import numpy as np 
 #import pandas as pd
 from pyopenms import *
-input_mzML = "./rawdata/mzML/CollinusKirromycin.mzML"
+input_mzML = "./Epemicins.mzML"
 
 exp = MSExperiment()
 print("Loading")
@@ -19,7 +19,7 @@ print(exp.getSourceFiles()[0].getNativeIDTypeAccession())
 print(exp.getSourceFiles()[0].getNativeIDType())
 
 # sorty my m/z
-exp.sortSpectra(True)
+exp.sortSpectra(True)  
 
 delta_mzs= []
 mzs = []
@@ -69,7 +69,7 @@ print('# Mass traces filtered:', len(mass_traces_final))
 feature_map_FFM.setUniqueIds()
 fh = FeatureXMLFile()
 print("Found", feature_map_FFM.size(), "features")
-fh.store('./pyOpenMS_results/FeatureFindingMetaboKirr.featureXML', feature_map_FFM)
+fh.store('./FeatureFindingMetaboepemicins.featureXML', feature_map_FFM)
 
 # Run metabolite adduct decharging detection
 # With SIRIUS you are only able to use singly charged adducts
@@ -89,7 +89,7 @@ cons_map0 = ConsensusMap()
 cons_map1 = ConsensusMap()
 mfd.compute(feature_map_FFM, feature_map_DEC, cons_map0, cons_map1)
 fmdec= FeatureXMLFile()
-fmdec.store("./pyOpenMS_results/deconvolutedKirr.featureXML", feature_map_DEC)
+fmdec.store("./deconvolutedepemicins.featureXML", feature_map_DEC)
 
 # Precursor corrector
 
@@ -114,7 +114,7 @@ sirius_algo_par.setValue("project:processors", 2)
 sirius_algo_par.setValue("fingerid:db", "BIO")
 sirius_algo.setParameters(sirius_algo_par)
 
-featureinfo = "./pyOpenMS_results/deconvolutedKirr.featureXML"
+featureinfo = "./deconvolutedepemicins.featureXML"
 fm_info = FeatureMapping_FeatureMappingInfo()
 feature_mapping = FeatureMapping_FeatureToMs2Indices() 
 sirius_algo.preprocessingSirius(featureinfo,
@@ -162,7 +162,7 @@ print("stored")
 
 
 #next step:call siriusQprocess
-out_csifingerid = "./pyOpenMS_results/csifingerIDKirr.mzTab" # empty string, since no file was specified - no CSIFingerId Output will be generated
+out_csifingerid = "./csifingerIDKirr.mzTab" # empty string, since no file was specified - no CSIFingerId Output will be generated
 executable= "/Users/eeko/Desktop/software/Contents/MacOS/sirius"
 subdirs = sirius_algo.callSiriusQProcess(String(sirius_tmp.getTmpMsFile()),
                                          String(sirius_tmp.getTmpOutDir()),
@@ -179,7 +179,7 @@ SiriusMzTabWriter.read(subdirs,
                         candidates,
                         sirius_result)
 print("storing..")
-siriusfile.store("./pyOpenMS_results/out_sirius_testKirr.mzTab", sirius_result)
+siriusfile.store("./out_sirius_testKirr.mzTab", sirius_result)
 print("stored")
 
 #CSI:FingerID
@@ -191,4 +191,4 @@ CsiFingerIdMzTabWriter.read(subdirs,
                     top_hits,
                     csi_result)
 
-csi_file.store("./pyOpenMS_results/csifingerIDKirr.mzTab", csi_result)
+csi_file.store("./csifingerIDKirr.mzTab", csi_result)

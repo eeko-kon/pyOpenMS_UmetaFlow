@@ -5,6 +5,6 @@
 		},
 	],
 	"settings": {
-		"python.venvPath": "/Users/eeko/opt/anaconda3/envs/pyopenms/bin/python"
+		"python.condaPath": "/Users/eeko/opt/anaconda3/envs/pyopenms/bin/python"
 	}
 }
