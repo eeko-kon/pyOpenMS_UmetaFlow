@@ -16,3 +16,4 @@ resources/*
 !results/SIRIUS/interim/.gitkeep
 !results/features/interim/.gitkeep
 !results/interim/.gitkeep
+*.xlsx
