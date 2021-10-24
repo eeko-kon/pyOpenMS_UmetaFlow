@@ -33,15 +33,13 @@ Step 2: https://docs.github.com/en/github/authenticating-to-github/connecting-to
 
 ### Step 2: Create a conda environment& install pyopenms
 
-Installing Snakemake using [Mamba](https://github.com/mamba-org/mamba) is advised. In case you don’t use [Mambaforge](https://github.com/conda-forge/miniforge#mambaforge) you can always install [Mamba](https://github.com/mamba-org/mamba) into any other Conda-based Python distribution with:
+Installing pyOpenMS using [conda](https://github.com/conda) is advised:
 
-    conda install -n base -c conda-forge mamba
+    conda create --name pyopenms python=3.8
+    conda activate pyopenms
+    pip install pyopenms
 
-Then install Snakemake with:
-
-    mamba create -c conda-forge -c bioconda -n snakemake snakemake
-
-For installation details, see the [instructions in the Snakemake documentation](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
+For installation details and further documentation, see: [pyOpenMS documentation](https://pyopenms.readthedocs.io/en/latest/).
 
 ### Step 3: Retreive files and executables
 
