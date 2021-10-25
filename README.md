@@ -41,17 +41,43 @@ Installing pyOpenMS using [conda](https://github.com/conda) is advised:
 
 For installation details and further documentation, see: [pyOpenMS documentation](https://pyopenms.readthedocs.io/en/latest/).
 
-### Step 3: Retreive files and executables
+#### For Linux only 
+
+Install mono with sudo (https://www.mono-project.com/download/stable/#download-lin):
+
+    sudo apt install mono-devel
+
+#### For iOS only 
+
+Install homebrew and wget (for **iOS** only!):
+
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    
+Press enter (RETURN) to continue 
+    
+    brew install wget
+
+### Step 3: Retrieve files and executables
 
 #### Get input data from zenodo (only for testing the workflow with the example dataset) or simply transfer your own data under the directory "data/raw/"
 
     (cd data && wget https://zenodo.org/record/5511115/files/raw.zip && unzip *.zip -d raw)
 
-#### Get the necessary executables (ThermoRawFileParser & sirius):
+#### Get the necessary executables (ThermoRawFileParser, OpenMS & sirius):
     
     (cd resources/ThermoRawFileParser && wget https://github.com/compomics/ThermoRawFileParser/releases/download/v1.3.4/ThermoRawFileParser.zip && unzip ThermoRawFileParser.zip)
-    
+
+#### For Linux only 
+
     (cd resources/Sirius/ && wget https://github.com/boecker-lab/sirius/releases/download/v4.9.3/sirius-4.9.3-linux64-headless.zip  && unzip *.zip)
+    
+    (cd resources  && wget https://github.com/OpenMS/OpenMS/releases/download/Release2.7.0/OpenMS-2.7.0-Debian-Linux-x86_64.deb && unzip *.zip)
+    
+#### For iOS only  
+
+    (cd resources/Sirius/ && wget https://github.com/boecker-lab/sirius/releases/download/v4.9.6/sirius-4.9.6-osx64-headless.zip  && unzip *.zip)
+    
+    (cd resources && wget https://github.com/OpenMS/OpenMS/releases/download/Release2.7.0/OpenMS-2.7.0-macOS.dmg && unzip *.zip)
 
 ### Step 5: Run all kernels and investigate the results
 All the results are in a csv format and can be opened simply with excel or using pandas dataframes. 
