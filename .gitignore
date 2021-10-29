@@ -10,10 +10,12 @@ results/*
 resources/*
 !GNPSExport.ini
 !data/.gitkeep
+!emptyfile.idXML
 !resources/ThermoRawFileParser/README.md
-!resources/Sirius/README.md
+!README.md
 !results/CSI/interim/.gitkeep
 !results/SIRIUS/interim/.gitkeep
 !results/features/interim/.gitkeep
 !results/interim/.gitkeep
 *.xlsx
+!common.py
