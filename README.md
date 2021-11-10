@@ -1,6 +1,6 @@
 ### pyOpenMS_untargeted_metabolomics
 
-##### This is the progress of a pyOpenMS workflow in a Jupyter notebook for untargeted metabolomics data preprocessing and analysis tailored by [Eftychia Eva Kontou](https://github.com/eeko-kon) using OpenMS and pyOpenMS which are python bindings to the cpp OpenMS alogithms.  
+##### This is the progress of a pyOpenMS workflow in a Jupyter notebook for untargeted metabolomics data preprocessing and analysis tailored by [Eftychia Eva Kontou](https://github.com/eeko-kon) using OpenMS and pyOpenMS which are python bindings to the cpp OpenMS alogithms. 
 
 ## Workflow overview
 ![dag](/images/pyOpenMS_workflow.svg)
@@ -18,18 +18,7 @@ Step 1: https://docs.github.com/en/github/authenticating-to-github/connecting-to
 Step 2: https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 
 
-    git clone git@github.com:NBChub/snakemake-metabolomics.git
-
-
-**Suggestion: Always add the genome ID in the filename for easier connection later to BGC_analytics.**
-
-`samples.tsv` example:
-
-|  sample_name |       comment                |
-|-------------:|-----------------------------:|
-| NBC_00162    | pyracrimicin                 |
-| MDNA_WGS_14  | epemicins_A_B                |
-
+    git clone https://github.com/eeko-kon/pyOpenMS_untargeted_metabolomics.git
 
 ### Step 2: Create a conda environment& install pyopenms
 
@@ -57,9 +46,9 @@ Press enter (RETURN) to continue
     
     brew install wget
 
-### Step 3: Retrieve files and executables
+### Step 3: Retrieve files (optional) and executables (not optional)
 
-#### Get input data from zenodo (only for testing the workflow with the example dataset) or simply transfer your own data under the directory "data/raw/"
+#### Get example data from zenodo (only for testing the workflow with the example dataset) or simply transfer your own data under the directory "data/raw/"
 
     (cd data && wget https://zenodo.org/record/5511115/files/raw.zip && unzip *.zip -d raw)
 
@@ -80,6 +69,7 @@ Press enter (RETURN) to continue
     (cd resources && wget https://github.com/OpenMS/OpenMS/releases/download/Release2.7.0/OpenMS-2.7.0-macOS.dmg && unzip *.zip)
 
 ### Step 5: Run all kernels and investigate the results
+
 All the results are in a csv format and can be opened simply with excel or using pandas dataframes. 
 
 
