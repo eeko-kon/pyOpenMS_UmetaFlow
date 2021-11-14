@@ -65,7 +65,7 @@ for mzml_file in input_mzml_files:
     params = ff.getParameters()
     #params[b'debug']= 3
     params[b'extract:mz_window'] = 5.0 
-    params[b'model:type']= b'none'
+    #params[b'model:type']= b'none'
     #params[b'extract:rt_window'] = 50.0
     params[b'detect:peak_width'] = 20.0  #adjust for wide peaks
     ff.setParameters(params)
