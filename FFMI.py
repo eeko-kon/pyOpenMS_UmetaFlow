@@ -153,3 +153,163 @@ for filename in input_feature_files:
     DF.to_csv(feature_csv)
     print(os.path.basename(filename))
     display(DF)
+
+#CREATE FEATURE MATRIX FOR PCA:
+input_feature_files = sorted(glob.glob('results/Requant/interim/FFMI*.featureXML'))
+
+feature_maps = []
+for featurexml_file in input_feature_files:
+    fmap = FeatureMap()
+    FeatureXMLFile().load(featurexml_file, fmap)
+    feature_maps.append(fmap)
+
+use_centroid_rt= False
+use_centroid_mz= True
+protein_ids = []
+peptide_ids= []
+
+mapper = IDMapper()
+
+input_mzml_files= sorted(glob.glob("results/Requant/interim/*.mzML"))
+print(input_mzml_files)
+for filename in input_mzml_files:
+    exp = MSExperiment()
+    MzMLFile().load(filename, exp)
+
+    for fmap in feature_maps:
+        if os.path.basename(fmap.getMetaValue('spectra_data')[0].decode()) == os.path.basename(filename):
+            peptide_ids = []
+            protein_ids = []
+            
+            mapper.annotate(fmap, peptide_ids, protein_ids, use_centroid_rt, use_centroid_mz, exp)
+            #print(fmap.getMetaValue('spectra_data')[0].decode())
+        featureidx_file = os.path.join("results", "", "Requant", "", "interim", "", 'IDMapper_' + os.path.basename(fmap.getMetaValue('spectra_data')[0].decode())[19:-5] +".featureXML")
+        FeatureXMLFile().store(featureidx_file, fmap)
+class ConsensusMapDF(ConsensusMap):
+    def __init__(self):
+        super().__init__()
+
+    def get_intensity_df(self):
+        labelfree = self.getExperimentType() == "label-free"
+        filemeta = self.getColumnHeaders()  # type: dict[int, ColumnHeader]
+        labels = list(set([header.label for header in
+                           filemeta.values()]))  # TODO could be more efficient. Do we require same channels in all files?
+        files = list(set([header.filename for header in filemeta.values()]))
+        label_to_idx = {k: v for v, k in enumerate(labels)}
+        file_to_idx = {k: v for v, k in enumerate(files)}
+
+        def gen(cmap: ConsensusMap, fun):
+            for f in cmap:
+                yield from fun(f)
+
+        if not labelfree:
+            # TODO write two functions for LF and labelled. One has only one channel, the other has only one file per CF
+            def extractRowBlocksChannelWideFileLong(f: ConsensusFeature):
+                subfeatures = f.getFeatureList()  # type: list[FeatureHandle]
+                filerows = defaultdict(lambda: [0] * len(labels))  # TODO use numpy array?
+                for fh in subfeatures:
+                    header = filemeta[fh.getMapIndex()]
+                    row = filerows[header.filename]
+                    row[label_to_idx[header.label]] = fh.getIntensity()
+                return (f.getUniqueId(), filerows)
+
+            def extractRowsChannelWideFileLong(f: ConsensusFeature):
+                uniqueid, rowdict = extractRowBlocksChannelWideFileLong(f)
+                for file, row in rowdict.items():
+                    row.append(file)
+                    yield tuple([uniqueid] + row)
+
+            if len(labels) == 1:
+                labels[0] = "intensity"
+            dtypes = [('id', np.dtype('uint64'))] + list(zip(labels, ['f'] * len(labels)))
+            dtypes.append(('file', 'U300'))
+            # For TMT we know that every feature can only be from one file, since feature = PSM
+            #cnt = 0
+            #for f in self:
+            #    cnt += f.size()
+
+            intyarr = np.fromiter(iter=gen(self, extractRowsChannelWideFileLong), dtype=dtypes, count=self.size())
+            return pd.DataFrame(intyarr).set_index('id')
+        else:
+            # Specialized for LabelFree which has to have only one channel
+            def extractRowBlocksChannelLongFileWideLF(f: ConsensusFeature):
+                subfeatures = f.getFeatureList()  # type: list[FeatureHandle]
+                row = [0.] * len(files)  # TODO use numpy array?
+                for fh in subfeatures:
+                    header = filemeta[fh.getMapIndex()]
+                    row[file_to_idx[header.filename]] = fh.getIntensity()
+                yield tuple([f.getUniqueId()] + row)
+
+            dtypes = [('id', np.dtype('uint64'))] + list(zip(files, ['f'] * len(files)))
+            # cnt = self.size()*len(files) # TODO for this to work, we would need to fill with NAs for CFs that do not go over all files
+            cnt = self.size()
+
+            intyarr = np.fromiter(iter=gen(self, extractRowBlocksChannelLongFileWideLF), dtype=dtypes, count=cnt)
+            return pd.DataFrame(intyarr).set_index('id')
+
+    def get_metadata_df(self):
+        def gen(cmap: ConsensusMap, fun):
+            for f in cmap:
+                yield from fun(f)
+
+        def extractMetaData(f: ConsensusFeature):
+            # subfeatures = f.getFeatureList()  # type: list[FeatureHandle]
+            pep = f.getPeptideIdentifications()  # type: list[PeptideIdentification]
+            if len(pep) != 0:
+                hits = pep[0].getHits()
+                if len(hits) != 0:
+                    besthit = hits[0]  # type: PeptideHit
+                    # TODO what else
+                    yield f.getUniqueId(), f.getCharge(), f.getRT(), f.getMZ(), f.getQuality()
+                
+        cnt = self.size()
+
+        mddtypes = [('id', np.dtype('uint64')), ('charge', 'i4'), ('RT', 'f'), ('mz', 'f'),
+                    ('quality', 'f')]
+        mdarr = np.fromiter(iter=gen(self, extractMetaData), dtype=mddtypes, count=cnt)
+        return pd.DataFrame(mdarr).set_index('id')
+
+feature_grouper = FeatureGroupingAlgorithmKD()
+
+consensus_map = ConsensusMapDF()
+file_descriptions = consensus_map.getColumnHeaders()
+
+input_feature_files = sorted(glob.glob('results/Requant/interim/IDMapper*.featureXML'))
+print(input_feature_files)
+
+feature_maps = []
+for featurexml_file in input_feature_files:
+    fmap = FeatureMap()
+    FeatureXMLFile().load(featurexml_file, fmap)
+    feature_maps.append(fmap)
+
+for i, feature_map in enumerate(feature_maps):
+    file_description = file_descriptions.get(i, ColumnHeader())
+    file_description.filename = feature_map.getMetaValue('spectra_data')[0].decode()
+    print(file_description.filename)
+
+    file_description.size = feature_map.size()
+    # file_description.unique_id = feature_map.getUniqueId() doesn't work on windows
+    #print(file_description.unique_id)
+    file_descriptions[i] = file_description
+
+feature_grouper.group(feature_maps, consensus_map)
+consensus_map.setColumnHeaders(file_descriptions)
+
+Consensus_file= os.path.join("results", "", "Requant", "","interim", "", 'consensus' + ".consensusXML")
+ConsensusXMLFile().store(Consensus_file, consensus_map)
+
+# get intensities as a DataFrame
+intensities = consensus_map.get_intensity_df()
+
+# get meta data as DataFrame
+meta_data = consensus_map.get_metadata_df()[['RT', 'mz', 'charge']]
+
+# you can concatenate these two for a "result" DataFrame
+result = pd.concat([meta_data, intensities], axis=1)
+
+# if you don't need labeled index, remove it (and/or save with index = False)
+result.reset_index(drop=True, inplace=True)
+
+# store as tsv file
+result.to_csv('results/Requant/FeatureMatrix.tsv', sep = '\t', index = False)
