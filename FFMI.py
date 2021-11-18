@@ -61,19 +61,17 @@ for mzml_file in input_mzml_files:
     ff.setMSData(spectra)
 
     # read library generate a metabo table with compounds
-    metabo_table = metaboTableFromFile('epemicins.tsv')
+    metabo_table = metaboTableFromFile('resources/MetaboliteIdentification.tsv')
+    
     params = ff.getParameters()
-    #params[b'debug']= 3
     params[b'extract:mz_window'] = 5.0 
-    #params[b'model:type']= b'none'
-    #params[b'extract:rt_window'] = 50.0
     params[b'detect:peak_width'] = 20.0  #adjust for wide peaks
     ff.setParameters(params)
+
     # FeatureMap to store results
     fm = FeatureMap()
     # run the FeatureFinderMetaboIdent with the metabo_table and store results in fm
     ff.run(metabo_table, fm)
-
     # save FeatureMap to file
     ff_file = os.path.join("results", "", "FFMI", "", "interim", "", 'FFMI_' + os.path.basename(mzml_file)[11:-5] +".featureXML")
     FeatureXMLFile().store(ff_file, fm)
@@ -123,26 +121,16 @@ class FeatureMapDF(FeatureMap):
                 yield from fun(f, meta_values)
 
         def extract_meta_data(f: Feature, meta_values):
-            pep = f.getPeptideIdentifications()  # type: list[PeptideIdentification]
             bb = f.getConvexHull().getBoundingBox2D()
                 
             vals = [f.getMetaValue(m) if f.metaValueExists(m) else np.NA for m in meta_values]   # find some NA or None value for numpy
-            
-            if len(pep) != 0:
-                hits = pep[0].getHits()
 
-                if len(hits) != 0:
-                    besthit = hits[0]  # type: PeptideHit
-                    yield f.getUniqueId(), besthit.getSequence().toString(), f.getCharge(), f.getRT(), f.getMZ(), bb[0][0], bb[1][0], f.getMetaValue("PeptideRef"), f.getOverallQuality(), f.getIntensity()
-                else:
-                    yield f.getUniqueId(), None, f.getCharge(), f.getRT(), f.getMZ(), bb[0][0], bb[1][0], f.getMetaValue("PeptideRef"), f.getOverallQuality(), f.getIntensity()
-            else:
-                yield f.getUniqueId(), None, f.getCharge(), f.getRT(), f.getMZ(), bb[0][0], bb[1][0], f.getMetaValue("PeptideRef"), f.getOverallQuality(), f.getIntensity()
+            yield f.getUniqueId(), f.getCharge(), f.getRT(), f.getMZ(), bb[0][0], bb[1][0], f.getOverallQuality(), f.getIntensity()
 
         cnt = self.size()
 
-        mddtypes = [('id', np.dtype('uint64')), ('sequence', 'U200'), ('charge', 'i4'), ('RT', 'f'), ('mz', 'f'),
-                    ('RTstart', 'f'), ('RTend', 'f'), ("PeptideRef", 'U200'),
+        mddtypes = [('id', np.dtype('uint64')), ('charge', 'i4'), ('RT', 'f'), ('mz', 'f'),
+                    ('RTstart', 'f'), ('RTend', 'f'),
                     ('quality', 'f'), ('intensity', 'f')]
         
         for meta_value in meta_values:
@@ -151,7 +139,7 @@ class FeatureMapDF(FeatureMap):
             else:
                 mddtypes.append((meta_value.decode(), 'U50'))
         mdarr = np.fromiter(iter=gen(self, extract_meta_data), dtype=mddtypes, count=cnt)
-        df= pd.DataFrame(mdarr).set_index('id').sort_values("mz").drop(columns= "sequence")
+        df= pd.DataFrame(mdarr).set_index('id').sort_values("mz")
         return df
 
 
