@@ -28,7 +28,7 @@ for exp in raw_data[:ref_index] + raw_data[ref_index+1:]:
     transformer.transformRetentionTimes(exp, trafo, True)
 
 for exp in raw_data:    
-    mzml_file = os.path.join("results", "", "FFMI", "", "interim", "", 'MapAligned_' + os.path.basename(exp.getLoadedFilePath())[19:-5] +".mzML")
+    mzml_file = os.path.join("results", "", "Requant", "", "interim", "", 'MapAligned_' + os.path.basename(exp.getLoadedFilePath())[19:-5] +".mzML")
     MzMLFile().store(mzml_file, exp)
 
 # read tsv file and create list of FeatureFinderMetaboIdentCompound
@@ -50,7 +50,7 @@ def metaboTableFromFile(path_to_library_file):
     return metaboTable
 
 
-input_mzml_files=glob.glob("results/FFMI/interim/*.mzML")
+input_mzml_files=glob.glob("results/Requant/interim/*.mzML")
 # load ms data from mzML file into MSExperiment
 for mzml_file in input_mzml_files:
     spectra = MSExperiment()
@@ -71,9 +71,9 @@ for mzml_file in input_mzml_files:
     # FeatureMap to store results
     fm = FeatureMap()
     # run the FeatureFinderMetaboIdent with the metabo_table and store results in fm
-    ff.run(metabo_table, fm)
+    ff.run(metabo_table, fm, String(mzml_file))
     # save FeatureMap to file
-    ff_file = os.path.join("results", "", "FFMI", "", "interim", "", 'FFMI_' + os.path.basename(mzml_file)[11:-5] +".featureXML")
+    ff_file = os.path.join("results", "", "Requant", "", "interim", "", 'FFMI_' + os.path.basename(mzml_file)[11:-5] +".featureXML")
     FeatureXMLFile().store(ff_file, fm)
 
 from collections import defaultdict
@@ -143,13 +143,13 @@ class FeatureMapDF(FeatureMap):
         return df
 
 
-input_feature_files = glob.glob('results/FFMI/interim/*.featureXML')
+input_feature_files = glob.glob('results/Requant/interim/*.featureXML')
 
 for filename in input_feature_files:
     fmap = FeatureMapDF()
     FeatureXMLFile().load(filename, fmap)
     DF= fmap.get_df()
-    feature_csv= os.path.join("results", "", "FFMI", "", 'features_' + os.path.basename(filename)[:-10] +"csv")
+    feature_csv= os.path.join("results", "", "Requant", "", 'features_' + os.path.basename(filename)[:-10] +"csv")
     DF.to_csv(feature_csv)
     print(os.path.basename(filename))
     display(DF)
@@ -260,11 +260,15 @@ class ConsensusMapDF(ConsensusMap):
                 if len(hits) != 0:
                     besthit = hits[0]  # type: PeptideHit
                     # TODO what else
-                    yield f.getUniqueId(), f.getCharge(), f.getRT(), f.getMZ(), f.getQuality()
-                
+                    yield f.getUniqueId(), besthit.getSequence().toString(), f.getCharge(), f.getRT(), f.getMZ(), f.getQuality()
+                else:
+                    yield f.getUniqueId(), None, f.getCharge(), f.getRT(), f.getMZ(), f.getQuality()
+            else:
+                yield f.getUniqueId(), None, f.getCharge(), f.getRT(), f.getMZ(), f.getQuality()
+
         cnt = self.size()
 
-        mddtypes = [('id', np.dtype('uint64')), ('charge', 'i4'), ('RT', 'f'), ('mz', 'f'),
+        mddtypes = [('id', np.dtype('uint64')), ('sequence', 'U200'), ('charge', 'i4'), ('RT', 'f'), ('mz', 'f'),
                     ('quality', 'f')]
         mdarr = np.fromiter(iter=gen(self, extractMetaData), dtype=mddtypes, count=cnt)
         return pd.DataFrame(mdarr).set_index('id')
