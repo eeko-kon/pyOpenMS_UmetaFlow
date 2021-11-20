@@ -5,7 +5,7 @@ import os
 import glob
 import csv
 
-input_mzml_files = glob.glob('results/interim/*.mzML')
+input_mzml_files = glob.glob('results/interim/PCpeak_*.mzML')
 
 raw_data=[]
 for filename in input_mzml_files:
@@ -28,7 +28,7 @@ for exp in raw_data[:ref_index] + raw_data[ref_index+1:]:
     transformer.transformRetentionTimes(exp, trafo, True)
 
 for exp in raw_data:    
-    mzml_file = os.path.join("results", "", "Requant", "", "interim", "", 'MapAligned_' + os.path.basename(exp.getLoadedFilePath())[19:-5] +".mzML")
+    mzml_file = os.path.join("results", "", "Requant", "", "interim", "", 'MapAligned_' + os.path.basename(exp.getLoadedFilePath())[7:-5] +".mzML")
     MzMLFile().store(mzml_file, exp)
 
 # read tsv file and create list of FeatureFinderMetaboIdentCompound
@@ -183,7 +183,7 @@ for filename in input_mzml_files:
             
             mapper.annotate(fmap, peptide_ids, protein_ids, use_centroid_rt, use_centroid_mz, exp)
             #print(fmap.getMetaValue('spectra_data')[0].decode())
-        featureidx_file = os.path.join("results", "", "Requant", "", "interim", "", 'IDMapper_' + os.path.basename(fmap.getMetaValue('spectra_data')[0].decode())[19:-5] +".featureXML")
+        featureidx_file = os.path.join("results", "", "Requant", "", "interim", "", 'IDMapper_' + os.path.basename(fmap.getMetaValue('spectra_data')[0].decode())[11:-5] +".featureXML")
         FeatureXMLFile().store(featureidx_file, fmap)
 class ConsensusMapDF(ConsensusMap):
     def __init__(self):
