@@ -4,9 +4,7 @@
 
 ## Workflow overview
 
-![dag](/images/WorkflowOverview.svg)
-
-The pipeline consists of three separate workflows that are interconnected, and one last data analysis notebook:
+The pipeline consists of three separate workflows that are interconnected, and one data analysis guide:
 
 1) Pre-processing: converting raw data to a feature table with a series of algorithms 
 
