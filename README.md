@@ -3,9 +3,19 @@
 ##### This is the progress of a pyOpenMS workflow in a Jupyter notebook for untargeted metabolomics data preprocessing and analysis tailored by [Eftychia Eva Kontou](https://github.com/eeko-kon) using OpenMS and pyOpenMS which are python bindings to the cpp OpenMS alogithms. 
 
 ## Workflow overview
-![dag](/images/pyOpenMS_workflow.svg)
+![dag](/images/pyOpenMS_workflows.svg)
 
-View the workflow with interactive comments in lucid: https://lucid.app/lucidchart/4dc81d37-bca3-4b2d-8253-33341ac79ab4/edit?viewport_loc=-71%2C53%2C2422%2C1416%2C0_0&invitationId=inv_5c1c0383-052a-4905-8146-dd842ee528fb 
+The pipeline consists of three separate workflows that are interconnected, and one last data analysis notebook:
+
+1) Pre-processing: converting raw data to a feature table with a series of algorithms 
+![dag](/images/1_Preprocessing+SIRIUS_CSI_FingerID.svg)
+2) GNPSexport: generate all the files necessary to create a FBMN job at GNPS. (see https://ccms-ucsd.github.io/GNPSDocumentation/featurebasedmolecularnetworking-with-openms/) 
+![dag](/images/2_GNPSExport.svg)
+3) Re-quantification: missing value imputation resulted by the pre-processing workflow.
+![dag](/images/3_Re-quantification.svg)
+4) Data analysis: Annotate the FeatureMatrix with GNPS metabolites, formula and structural predictions, and perform outlier analysis to find features detected less frequently in the matrix.
+![dag](/images/4_Data_analysis.svg)
+
 
 ## Usage
 ### Step 1: Clone the workflow
