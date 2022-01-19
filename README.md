@@ -5,7 +5,6 @@
 ## Workflow overview
 ![dag](/images/pyOpenMS_workflow.svg)
 
-View the workflow with interactive comments in lucid: https://lucid.app/lucidchart/4dc81d37-bca3-4b2d-8253-33341ac79ab4/edit?viewport_loc=-71%2C53%2C2422%2C1416%2C0_0&invitationId=inv_5c1c0383-052a-4905-8146-dd842ee528fb 
 
 ## Usage
 ### Step 1: Clone the workflow
