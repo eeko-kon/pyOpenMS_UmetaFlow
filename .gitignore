@@ -19,3 +19,5 @@ resources/*
 !results/interim/.gitkeep
 *.xlsx
 !common.py
+QExactive/*
+6_DataAnalysis*.ipynb

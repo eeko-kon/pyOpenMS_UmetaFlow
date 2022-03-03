@@ -14,7 +14,7 @@ The pipeline consists of three separate workflows that are interconnected, and o
 
 4) Data analysis: Annotate the FeatureMatrix with GNPS metabolites, formula and structural predictions, and perform outlier analysis to find features detected less frequently in the matrix.
 
-![dag](/images/pyOpenMS_workflows.svg)
+![dag](/images/MetabolomicsFlow.svg)
 
 
 ## Usage
