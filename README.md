@@ -34,7 +34,7 @@ Step 2: https://docs.github.com/en/github/authenticating-to-github/connecting-to
 
 Installing pyOpenMS using [conda](https://github.com/conda) is advised:
 
-    conda create --name pyopenms python=3.8
+    conda create --name pyopenms python=3.9
     conda activate pyopenms
     pip install pyopenms
 
@@ -68,13 +68,13 @@ Press enter (RETURN) to continue
 
 #### For Linux only 
 
-    (cd resources/Sirius/ && wget https://github.com/boecker-lab/sirius/releases/download/v4.9.3/sirius-4.9.3-linux64-headless.zip  && unzip *.zip)
+    (cd resources/Sirius/ && wget https://github.com/boecker-lab/sirius/releases/download/v4.9.12/sirius-4.9.12-linux64-headless.zip && unzip *.zip)
     
     (cd resources  && wget https://github.com/OpenMS/OpenMS/releases/download/Release2.7.0/OpenMS-2.7.0-Debian-Linux-x86_64.deb && unzip *.zip)
     
 #### For iOS only  
 
-    (cd resources/Sirius/ && wget https://github.com/boecker-lab/sirius/releases/download/v4.9.6/sirius-4.9.6-osx64-headless.zip  && unzip *.zip)
+    (cd resources/Sirius/ && wget https://github.com/boecker-lab/sirius/releases/download/v4.9.12/sirius-4.9.12-osx64-headless.zip && unzip *.zip)
     
     (cd resources && wget https://github.com/OpenMS/OpenMS/releases/download/Release2.7.0/OpenMS-2.7.0-macOS.dmg && unzip *.zip)
 
