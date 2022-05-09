@@ -1,13 +1,12 @@
 ### pyOpenMS_untargeted_metabolomics
 
-##### This is the progress of a pyOpenMS workflow in a Jupyter notebook for untargeted metabolomics data preprocessing and analysis tailored by [Eftychia Eva Kontou](https://github.com/eeko-kon) using OpenMS and pyOpenMS which are python bindings to the cpp OpenMS alogithms. 
+##### This is the progress of a pyOpenMS workflow in a Jupyter notebook for untargeted metabolomics data preprocessing and analysis tailored by [Eftychia Eva Kontou](https://github.com/eeko-kon) and [Axel Walter](https://github.com/axelwalter) using OpenMS and pyOpenMS which are python bindings to the cpp OpenMS alogithms. 
 
 ## Workflow overview
 
-
 The pipeline consists of five interconnected steps:
 
-1) (optional)[File conversion](1_FileConversion.ipynb): Simply add your Thermo raw files in data/raw/ and they will be converted to centroid mzML files. If you have Agilent or Bruker files, skip that step (write "FALSE" for rule fileconversion in the config.yaml file - see more under "Configure workflow") and convert them independently using proteowizard (see https://proteowizard.sourceforge.io/) and add them to the data/mzML/ directory.
+1) [File conversion](1_FileConversion.ipynb) (optional): Simply add your Thermo raw files in data/raw/ and they will be converted to centroid mzML files. If you have Agilent or Bruker files, skip that step (write "FALSE" for rule fileconversion in the config.yaml file - see more under "Configure workflow") and convert them independently using proteowizard (see https://proteowizard.sourceforge.io/) and add them to the data/mzML/ directory.
 
 2) [Pre-processing](2_Preprocessing_requant.ipynb): converting raw data to a feature table with a series of algorithms & re-quantification: Re-quantify all raw files to avoid missing values resulted by the pre-processing workflow for statistical analysis and data exploration.
 
