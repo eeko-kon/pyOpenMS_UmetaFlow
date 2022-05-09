@@ -78,6 +78,9 @@ Press enter (RETURN) to continue
 
     pip install pyteomics
 
+    pip install --upgrade nbformat
+
+    pip install matplotlib
 ### Step 5: Run all kernels and investigate the results
 
 All the results are in a csv format and can be opened simply with excel or using pandas dataframes. 
