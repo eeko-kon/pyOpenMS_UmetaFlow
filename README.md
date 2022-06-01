@@ -42,9 +42,17 @@ First, get the latest wheels:
     mv ${MY_OS}-wheels.zip\?status=completed ${MY_OS}-wheels.zip
     unzip *.zip
 
+Then, create a conda environment and install the wheels and other dependencies:
+
     conda create --name pyopenms python=3.10
     conda activate pyopenms
-    pip install *.whl
+    pip install *cp310*.whl
+    rm *.zip & rm *.whl
+    conda install -n pyopenms ipykernel --update-deps --force-reinstall
+    conda install -c bioconda sirius-csifingerid
+    pip install pyteomics
+    pip install --upgrade nbformat
+    pip install matplotlib
 
 For installation details and further documentation, see: [pyOpenMS documentation](https://pyopenms.readthedocs.io/en/latest/).
 
@@ -71,16 +79,9 @@ Press enter (RETURN) to continue
     (cd data && wget https://zenodo.org/record/5511115/files/raw.zip && unzip *.zip -d raw)
 
 #### Get the necessary executables (ThermoRawFileParser & Sirius):
-    
+
     (cd resources/ThermoRawFileParser && wget https://github.com/compomics/ThermoRawFileParser/releases/download/v1.3.4/ThermoRawFileParser.zip && unzip ThermoRawFileParser.zip)
-    
-    conda install -c bioconda sirius-csifingerid
 
-    pip install pyteomics
-
-    pip install --upgrade nbformat
-
-    pip install matplotlib
 ### Step 5: Run all kernels and investigate the results
 
 All the results are in a csv format and can be opened simply with excel or using pandas dataframes. 
