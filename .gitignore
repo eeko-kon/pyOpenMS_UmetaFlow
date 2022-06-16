@@ -27,3 +27,4 @@ pyOpenMS_old_results/*
 !pymetabo/*
 *whl
 *.py
+*.csv
