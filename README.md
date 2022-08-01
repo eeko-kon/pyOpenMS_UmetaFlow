@@ -30,7 +30,7 @@ Step 1: https://docs.github.com/en/github/authenticating-to-github/connecting-to
 Step 2: https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 
 
-    git clone https://github.com/eeko-kon/pyOpenMS_untargeted_metabolomics.git
+    git clone https://github.com/eeko-kon/pyOpenMS_UmetaFlow.git
 
 ### Step 2: Create a conda environment& install pyopenms
     
@@ -87,7 +87,7 @@ Follow the Next steps instructions to add Linuxbrew to your PATH and to your bas
 
 #### Get example data from zenodo (only for testing the workflow with the example dataset) or simply transfer your own data under the directory "data/raw/"
 
-    (cd data && wget https://zenodo.org/record/5511115/files/raw.zip && unzip *.zip -d raw)
+(cd data && wget https://zenodo.org/record/6948449/files/Commercial_std_raw.zip?download=1 && unzip *.zip -d raw)
 
 #### Get the necessary executables (ThermoRawFileParser & Sirius):
 
