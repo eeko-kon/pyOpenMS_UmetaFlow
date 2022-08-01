@@ -8,13 +8,15 @@ The pipeline consists of five interconnected steps:
 
 1) [File conversion](1_FileConversion.ipynb) (optional): Simply add your Thermo raw files in data/raw/ and they will be converted to centroid mzML files. If you have Agilent or Bruker files, skip that step (write "FALSE" for rule fileconversion in the config.yaml file - see more under "Configure workflow") and convert them independently using proteowizard (see https://proteowizard.sourceforge.io/) and add them to the data/mzML/ directory.
 
-2) [Pre-processing](2_Preprocessing_requant.ipynb): converting raw data to a feature table with a series of algorithms & re-quantification: Re-quantify all raw files to avoid missing values resulted by the pre-processing workflow for statistical analysis and data exploration.
+2) [Pre-processing](2_Preprocessing.ipynb): Converting your raw data to a table of metabolic features with a series of algorithms.
 
-3) Structural and formula predictions with [SIRIUS and CSI:FingeID](3_SIRIUS_CSI.ipynb)
+3) [Re-quantification](3_Requantification(optional).ipynb): Re-quantify all raw files to avoid missing values resulted by the pre-processing workflow for statistical analysis and data exploration (optional step)
 
 4) [GNPSexport](4_GNPSExport.ipynb): generate all the files necessary to create a [FBMN](https://ccms-ucsd.github.io/GNPSDocumentation/featurebasedmolecularnetworking-with-openms/) or [IIMN](https://ccms-ucsd.github.io/GNPSDocumentation/fbmn-iin/#iimn-networks-with-collapsed-ion-identity-edges) job at GNPS.  
 
-5) [Annotation](5_Annotation.ipynb): annotate the feature tables with #1 ranked SIRIUS and CSI:FingerID predictions, as well as GNPS MSMS library matching annotations.
+5) Structural and formula predictions with [SIRIUS and CSI:FingeID](5_SIRIUS_CSI.ipynb)
+
+6) [Annotations](5_Annotation.ipynb): annotate the feature tables with #1 ranked SIRIUS and CSI:FingerID predictions, as well as (optionally) with GNPS MSMS library matching annotations.
 
 ![dag](/images/MetabolomicsFlow.svg)
 
