@@ -14,7 +14,7 @@ The pipeline consists of five interconnected steps:
 
 4) [GNPSexport](4_GNPSExport.ipynb): generate all the files necessary to create a [FBMN](https://ccms-ucsd.github.io/GNPSDocumentation/featurebasedmolecularnetworking-with-openms/) or [IIMN](https://ccms-ucsd.github.io/GNPSDocumentation/fbmn-iin/#iimn-networks-with-collapsed-ion-identity-edges) job at GNPS.  
 
-5) Structural and formula predictions with [SIRIUS and CSI:FingeID](5_SIRIUS_CSI.ipynb)
+5) Structural and formula predictions with [SIRIUS and CSI:FingerID](5_SIRIUS_CSI.ipynb)
 
 6) [Annotations](5_Annotation.ipynb): annotate the feature tables with #1 ranked SIRIUS and CSI:FingerID predictions, as well as (optionally) with GNPS MSMS library matching annotations.
 
