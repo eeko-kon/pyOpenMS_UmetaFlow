@@ -16,7 +16,9 @@ The pipeline consists of five interconnected steps:
 
 5) Structural and formula predictions with [SIRIUS and CSI:FingerID](5_SIRIUS_CSI.ipynb)
 
-6) [Annotations](5_Annotation.ipynb): annotate the feature tables with #1 ranked SIRIUS and CSI:FingerID predictions, as well as (optionally) with GNPS MSMS library matching annotations.
+6) [Annotations](6_Annotation.ipynb): annotate the feature tables with #1 ranked SIRIUS and CSI:FingerID predictions, as well as (optionally) with GNPS MSMS library matching annotations.
+
+7) [Data integration](7_FBMN_SIRIUS_integration.ipynb): Integrate the #1 ranked SIRIUS and CSI:FingerID predictions to the graphml file from GNPS FBMN for visualisation. 
 
 ![dag](/images/MetabolomicsFlow.svg)
 

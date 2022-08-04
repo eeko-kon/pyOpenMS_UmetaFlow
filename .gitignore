@@ -28,3 +28,4 @@ pyOpenMS_old_results/*
 *whl
 *.py
 *.csv
+Visualise_2.ipynb
