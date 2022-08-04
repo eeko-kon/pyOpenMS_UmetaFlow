@@ -20,7 +20,7 @@ The pipeline consists of five interconnected steps:
 
 7) [Data integration](7_FBMN_SIRIUS_integration.ipynb): Integrate the #1 ranked SIRIUS and CSI:FingerID predictions to the graphml file from GNPS FBMN for visualisation. 
 
-![dag](/images/MetabolomicsFlow.svg)
+![dag](/images/UmetaFlow_graph.svg)
 
 
 ## Usage
