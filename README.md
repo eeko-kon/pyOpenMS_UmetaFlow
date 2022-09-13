@@ -68,10 +68,10 @@ Install [mono](https://www.mono-project.com/download/stable/#download-lin) with 
 
 #### For both systems
 
-Install homebrew and wget:
+Install homebrew and wget (for **iOS** only!):
 
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
+    
 Press enter (RETURN) to continue 
 
 #### For Linux only !
@@ -101,6 +101,7 @@ Follow the Next steps instructions to add Linuxbrew to your PATH and to your bas
 
 All the results are in a tsv format and can be opened simply with excel or using pandas dataframes. 
 
+
 ### Citations
 
 Pfeuffer J, Sachsenberg T, Alka O, et al. OpenMS – A platform for reproducible analysis of mass spectrometry data. J Biotechnol. 2017;261:142-148. doi:10.1016/j.jbiotec.2017.05.016
@@ -114,4 +115,4 @@ Nothias LF, Petras D, Schmid R, et al. Feature-based molecular networking in the
 Mölder F, Jablonski KP, Letcher B, et al. Sustainable data analysis with Snakemake. Published online January 18, 2021. doi:10.12688/f1000research.29032.1
 
 ### Test Data (only for testing the workflow with the example dataset)
-* Current test data are built from known metabolite producer strains or standard samples that have been analyzed with a Thermo IDX mass spectrometer. The presence of the metabolites and their fragmentation patterns has been manually confirmed using TOPPView.
+* Current test data are built from known metabolite producer strains or standard samples that have been analysed with a Thermo IDX mass spectrometer. The presence of the metabolites and their fragmentation patterns has been manually confirmed using TOPPView.
