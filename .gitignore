@@ -5,7 +5,6 @@ __pycache__/*
 *.raw
 *.DS_Store
 .vscode/
-data/*
 results/*
 resources/*
 !GNPSExport.ini
@@ -29,3 +28,5 @@ pyOpenMS_old_results/*
 *.py
 *.csv
 Visualise_2.ipynb
+data/raw/*.raw
+data/mzML/*.mzML
