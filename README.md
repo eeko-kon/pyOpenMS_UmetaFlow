@@ -1,6 +1,6 @@
 ### pyOpenMS_untargeted_metabolomics
 
-##### This is the progress of a pyOpenMS workflow in a Jupyter notebook for untargeted metabolomics data preprocessing and analysis tailored by [Eftychia Eva Kontou](https://github.com/eeko-kon) and [Axel Walter](https://github.com/axelwalter) using OpenMS and pyOpenMS which are python bindings to the cpp OpenMS alogithms. 
+##### This a workflow for untargeted metabolomics data preprocessing and analysis tailored in Jupyter notebooks by [Eftychia Eva Kontou](https://github.com/eeko-kon) and [Axel Walter](https://github.com/axelwalter) using pyOpenMS which are python bindings to the cpp OpenMS alogithms. 
 
 ## Workflow overview
 
@@ -53,7 +53,6 @@ Then, create a conda environment and install the wheels and other dependencies:
     pip install *cp310*.whl
     rm *.zip & rm *.whl
     conda install -n pyopenms ipykernel --update-deps --force-reinstall
-    conda install -c bioconda sirius-csifingerid
     pip install pyteomics
     pip install --upgrade nbformat
     pip install matplotlib
@@ -96,6 +95,8 @@ Follow the Next steps instructions to add Linuxbrew to your PATH and to your bas
 #### Get the necessary executables (ThermoRawFileParser & Sirius):
 
     (cd resources/ThermoRawFileParser && wget https://github.com/compomics/ThermoRawFileParser/releases/download/v1.3.4/ThermoRawFileParser.zip && unzip ThermoRawFileParser.zip)
+
+Download the latest SIRIUS executable manually from [here](https://github.com/boecker-lab/sirius/releases) until available as a conda-forge installation. Choose the headless zipped file compatible for your operating system (linux, macOS or windows) and unzip it under the directory "resources/".
 
 ### Step 5: Run all kernels and investigate the results
 
