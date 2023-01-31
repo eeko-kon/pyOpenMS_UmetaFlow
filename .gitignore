@@ -30,3 +30,4 @@ pyOpenMS_old_results/*
 Visualise_2.ipynb
 data/raw/*.raw
 data/mzML/*.mzML
+pyOpenMS_data_analysis/*
